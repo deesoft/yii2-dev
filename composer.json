@@ -1,0 +1,63 @@
+{
+    "name": "mdmsoft/yii2-dev",
+    "description": "Yii2 libraries development project",
+    "keywords": ["yii2", "extension", "main"],
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Misbahul Munir",
+            "email": "misbahuldmunir@gmail.com",
+            "role": "Core project development"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/mdmsoft/yii2-dev/issues",
+        "source": "https://github.com/mdmsoft/yii2-dev"
+    },
+    "minimum-stability": "dev",
+    "replace": {
+        "mdmsoft/yii2-admin": "self.version",
+        "mdmsoft/yii2-composer": "self.version",
+        "mdmsoft/yii2-gii": "self.version",
+        "mdmsoft/yii2-easyui": "self.version"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0",
+        "yiisoft/yii2-codeception": "~2.0",
+        "yiisoft/yii2-faker": "~2.0"
+    },
+    "suggest": {
+        "codeception/codeception": "Codeception, 1.8.*@dev is currently works well with Yii.",
+        "codeception/specify": "BDD style code blocks for PHPUnit and Codeception",
+        "codeception/verify": "BDD Assertions for PHPUnit and Codeception"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "scripts": {
+        "post-install-cmd": "mdm\\composer\\Installer::apply",
+        "post-update-cmd": "mdm\\composer\\Installer::apply"
+    },
+    "autoload": {
+        "psr-4": {
+            "mdm\\composer\\": "libraries/composer",
+            "mdm\\admin\\": "libraries/admin",
+            "mdm\\easyui\\": "libraries/easyui",
+            "mdm\\gii\\": "libraries/gii"
+        }
+    },
+    "extra": {
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
