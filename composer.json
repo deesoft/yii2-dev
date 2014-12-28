@@ -49,7 +49,8 @@
             "mdm\\composer\\": "libraries/composer",
             "mdm\\admin\\": "libraries/admin",
             "mdm\\easyui\\": "libraries/easyui",
-            "mdm\\gii\\": "libraries/gii"
+            "mdm\\gii\\": "libraries/gii",
+            "mdm\\console\\": "libraries/console"
         }
     },
     "extra": {
