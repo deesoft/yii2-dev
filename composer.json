@@ -41,8 +41,8 @@
         "process-timeout": 1800
     },
     "scripts": {
-        "post-install-cmd": "mdm\\composer\\Installer::apply",
-        "post-update-cmd": "mdm\\composer\\Installer::apply"
+        "post-install-cmd": "dee\\composer\\Installer::apply",
+        "post-update-cmd": "dee\\composer\\Installer::apply"
     },
     "autoload": {
         "psr-4": {
