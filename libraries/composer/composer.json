@@ -1,5 +1,5 @@
 {
-    "name": "mdmsoft/yii2-composer",
+    "name": "deesoft/yii2-composer",
     "description": "The composer plugin for Yii extension installer",
     "keywords": ["yii2", "composer", "extension installer"],
     "type": "composer-plugin",
@@ -14,7 +14,9 @@
         "yiisoft/yii2-composer": "~2.0"
     },
     "autoload": {
-        "psr-4": { "mdm\\composer\\": "" }
+        "psr-4": {
+            "dee\\composer\\": ""
+        }
     },
     "extra": {
         "branch-alias": {

@@ -18,9 +18,9 @@
     "minimum-stability": "dev",
     "replace": {
         "mdmsoft/yii2-admin": "self.version",
-        "mdmsoft/yii2-composer": "self.version",
         "mdmsoft/yii2-gii": "self.version",
-        "mdmsoft/yii2-easyui": "self.version"
+        "deesoft/yii2-composer": "self.version",
+        "deesoft/yii2-easyui": "self.version"
     },
     "require": {
         "php": ">=5.4.0",
@@ -46,11 +46,11 @@
     },
     "autoload": {
         "psr-4": {
-            "mdm\\composer\\": "libraries/composer",
             "mdm\\admin\\": "libraries/admin",
-            "mdm\\easyui\\": "libraries/easyui",
             "mdm\\gii\\": "libraries/gii",
-            "mdm\\console\\": "libraries/console"
+            "dee\\easyui\\": "libraries/easyui",
+            "dee\\console\\": "libraries/console",
+            "dee\\composer\\": "libraries/composer"
         }
     },
     "extra": {

@@ -1,5 +1,5 @@
 <?php
-namespace mdm\composer;
+namespace dee\composer;
 /**
  * Configure
  *
