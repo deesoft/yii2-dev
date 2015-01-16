@@ -30,3 +30,6 @@ composer.lock
 phpunit.phar
 # local phpunit config
 /phpunit.xml
+/libraries/easyui/assets/src/
+/libraries/easyui/assets/plugins/
+/libraries/easyui/assets/demo/
