@@ -11,11 +11,12 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
+
 /**
  * Plugin is the composer plugin that registers the Yii composer installer.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * @author Misbahul D Munir <misbahuldmunir@gmail.com>
+ * @since 1.0
  */
 class Plugin implements PluginInterface
 {
@@ -24,12 +25,13 @@ class Plugin implements PluginInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $installer = new Installer($io, $composer);
-        $composer->getInstallationManager()->addInstaller($installer);
-        $file = rtrim($composer->getConfig()->get('vendor-dir'), '/') . '/yiisoft/extensions.php';
-        if (!is_file($file)) {
-            @mkdir(dirname($file), 0777, true);
-            file_put_contents($file, "<?php\n\nreturn [];\n");
-        }
+//        $installer = new Installer($io, $composer);
+//        $composer->getInstallationManager()->addInstaller($installer);
+//        $file = rtrim($composer->getConfig()->get('vendor-dir'), '/') . '/yiisoft/extensions.php';
+//        if (!is_file($file)) {
+//            @mkdir(dirname($file), 0777, true);
+//            file_put_contents($file, "<?php\n\nreturn [];\n");
+//        }
+        $composer->getEventDispatcher()->addSubscriber(new Subscriber());
     }
 }
