@@ -1,5 +1,5 @@
 {
-    "name": "mdmsoft/yii2-dev",
+    "name": "deesoft/yii2-dev",
     "description": "Yii2 libraries development project",
     "keywords": ["yii2", "extension", "main"],
     "type": "project",
@@ -12,8 +12,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/mdmsoft/yii2-dev/issues",
-        "source": "https://github.com/mdmsoft/yii2-dev"
+        "issues": "https://github.com/deesoft/yii2-dev/issues",
+        "source": "https://github.com/deesoft/yii2-dev"
     },
     "minimum-stability": "dev",
     "replace": {
@@ -25,7 +25,8 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0",
-        "yiisoft/yii2-jui": "~2.0"
+        "yiisoft/yii2-jui": "~2.0",
+        "deesoft/yii2-composer": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0",
@@ -41,17 +42,12 @@
     "config": {
         "process-timeout": 1800
     },
-    "scripts": {
-        "post-install-cmd": "dee\\composer\\Installer::apply",
-        "post-update-cmd": "dee\\composer\\Installer::apply"
-    },
     "autoload": {
         "psr-4": {
             "mdm\\admin\\": "libraries/admin",
             "mdm\\gii\\": "libraries/gii",
             "dee\\easyui\\": "libraries/easyui",
-            "dee\\console\\": "libraries/console",
-            "dee\\composer\\": "libraries/composer"
+            "dee\\console\\": "libraries/console"
         }
     },
     "extra": {
