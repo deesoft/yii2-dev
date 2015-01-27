@@ -33,3 +33,5 @@ phpunit.phar
 /libraries/easyui/assets/src/
 /libraries/easyui/assets/plugins/
 /libraries/easyui/assets/demo/
+/push.sh
+/pull.sh
