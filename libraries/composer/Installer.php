@@ -14,11 +14,6 @@ use Composer\Util\Filesystem;
 class Installer extends \yii\composer\Installer
 {
 
-    public function supports($packageType)
-    {
-        return $packageType === 'project';
-    }
-
     protected function generateDefaultAlias(PackageInterface $package)
     {
         $fs = new Filesystem;
