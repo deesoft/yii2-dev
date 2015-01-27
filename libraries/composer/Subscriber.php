@@ -24,8 +24,6 @@ class Subscriber implements \Composer\EventDispatcher\EventSubscriberInterface
     
     public function apply(CommandEvent $event)
     {
-        $composer = $event->getComposer();
-        $installer = new Installer($event->getIO(), $composer);
-        $installer->addPackage($composer->getPackage());
+        Installer::apply($event);
     }
 }

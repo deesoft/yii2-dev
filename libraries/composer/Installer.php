@@ -4,6 +4,7 @@ namespace dee\composer;
 
 use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
+use Composer\Script\CommandEvent;
 
 /**
  * Configure
@@ -44,5 +45,12 @@ class Installer extends \yii\composer\Installer
         }
 
         return $aliases;
+    }
+    
+    public static function apply(CommandEvent $event)
+    {
+        $composer = $event->getComposer();
+        $installer = new static($event->getIO(), $composer);
+        $installer->addPackage($composer->getPackage());
     }
 }
