@@ -81,8 +81,9 @@ class Installer extends \yii\composer\Installer
         }  else {
             $dir = var_export($this->vendorDir,true);
         }
-        $array = str_replace("'<vendor-dir>", '$vendorDir . \'', var_export($extensions, true));
-        $array = str_replace("'<base-dir>", '$baseDir . \'', var_export($extensions, true));
+        $array = var_export($extensions, true);
+        $array = str_replace("'<vendor-dir>", '$vendorDir . \'', $array);
+        $array = str_replace("'<base-dir>", '$baseDir . \'', $array);
         $content = <<<FILE
 <?php 
 
