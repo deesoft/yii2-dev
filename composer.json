@@ -26,7 +26,10 @@
         "yiisoft/yii2": "~2.0",
         "yiisoft/yii2-jui": "~2.0",
         "deesoft/yii2-composer": "~1.0",
-        "mdmsoft/yii2-admin": "~1.0"
+        "mdmsoft/yii2-admin": "~1.0",
+        "mdmsoft/yii2-autonumber": "~1.0",
+        "mdmsoft/yii2-format-converter": "~1.0",
+        "mdmsoft/yii2-ar-behaviors": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0",
@@ -46,10 +49,12 @@
         "psr-4": {
             "mdm\\gii\\": "libraries/gii",
             "dee\\easyui\\": "libraries/easyui",
-            "dee\\console\\": "libraries/console"
+            "dee\\console\\": "libraries/console",
+            "biz\\core\\": "libraries/biz"
         }
     },
     "extra": {
+        "bootstrap": "biz\\core\\Bootstrap",
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
