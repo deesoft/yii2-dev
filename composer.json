@@ -29,7 +29,11 @@
         "mdmsoft/yii2-admin": "~1.0",
         "mdmsoft/yii2-autonumber": "~1.0",
         "mdmsoft/yii2-format-converter": "~1.0",
-        "mdmsoft/yii2-ar-behaviors": "~1.0"
+        "mdmsoft/yii2-ar-behaviors": "~1.0",
+        "bower-asset/angular": "~1.3.0",
+        "bower-asset/angular-mocks": "~1.3.0",
+        "bower-asset/angular-route": "~1.3.0",
+        "bower-asset/angular-resource": "~1.3.0"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0",
@@ -50,11 +54,16 @@
             "mdm\\gii\\": "libraries/gii",
             "dee\\easyui\\": "libraries/easyui",
             "dee\\console\\": "libraries/console",
-            "biz\\core\\": "libraries/biz"
+            "biz\\core\\": "libraries/biz",
+            "dee\\angular\\": "libraries/angular",
+            "dee\\adminlte\\": "libraries/adminlte"
+        },
+        "psr-0":{
+            "libraries\\Bootstrap":""
         }
     },
     "extra": {
-        "bootstrap": "biz\\core\\Bootstrap",
+        "bootstrap": "libraries\\Bootstrap",
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
