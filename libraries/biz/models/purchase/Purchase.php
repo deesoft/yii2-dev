@@ -20,7 +20,7 @@ use Yii;
  * @property string $updated_at
  * @property integer $updated_by
  *
- * @property PurchaseDtl[] $purchaseDtls
+ * @property PurchaseDtl[] $items
  * 
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>  
  * @since 3.0
@@ -45,13 +45,13 @@ class Purchase extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['supplier_id', 'branch_id', 'date', 'purchaseDtls'], 'required'],
+            [['supplier_id', 'branch_id', 'date', 'items'], 'required'],
             [['supplier_id', 'branch_id', 'status', 'created_by', 'updated_by'], 'integer'],
             [['status'], 'default', 'value' => self::STATUS_DRAFT],
             [['date', 'created_at', 'updated_at'], 'safe'],
             [['discount'], 'number'],
             [['number'], 'string', 'max' => 16],
-            [['purchaseDtls'], 'calcDetails'],
+            [['items'], 'calcDetails'],
         ];
     }
 
@@ -84,7 +84,7 @@ class Purchase extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPurchaseDtls()
+    public function getItems()
     {
         return $this->hasMany(PurchaseDtl::className(), ['purchase_id' => 'id']);
     }
