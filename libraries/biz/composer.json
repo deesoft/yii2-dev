@@ -1,5 +1,5 @@
 {
-    "name": "sangkil/biz3-api",
+    "name": "deesoft/biz3-core",
     "description": "Sangkilbiz api",
     "keywords": ["core", "erp", "api"],
     "type": "yii2-extension",
