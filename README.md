@@ -18,4 +18,3 @@ You can then install the application using the following command:
 # cd development
 # php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
 # php composer.phar update
-~~~
