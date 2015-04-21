@@ -51,9 +51,10 @@
             "mdm\\gii\\": "libraries/gii",
             "dee\\easyui\\": "libraries/easyui",
             "dee\\console\\": "libraries/console",
-            "biz\\core\\": "libraries/biz",
+            "biz\\api\\": "libraries/biz-api",
             "dee\\angular\\": "libraries/angular",
-            "dee\\adminlte\\": "libraries/adminlte"
+            "dee\\adminlte\\": "libraries/adminlte",
+            "dee\\rest\\": "libraries/rest"
         },
         "psr-0":{
             "libraries\\Bootstrap":""

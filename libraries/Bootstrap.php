@@ -13,7 +13,7 @@ use Yii;
 class Bootstrap implements \yii\base\BootstrapInterface
 {
     protected $bootstraps = [
-        'biz\\core\\Bootstrap',
+        'biz\\api\\Bootstrap',
     ];
 
     /**
