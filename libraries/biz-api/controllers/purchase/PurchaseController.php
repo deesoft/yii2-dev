@@ -44,8 +44,7 @@ class PurchaseController extends Controller
     }
 
     /**
-     *
-     * @param \biz\api\base\Event $event
+     * @param \dee\base\Event $event
      */
     public function ePatch($event)
     {

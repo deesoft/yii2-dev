@@ -1,12 +1,12 @@
 <?php
 
-namespace biz\api\base;
+namespace dee\base;
 
 /**
  * Description of Event
  *
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>  
- * @since 3.0
+ * @since 1.0
  */
 class Event extends \yii\base\Event
 {
