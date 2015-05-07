@@ -1,6 +1,6 @@
 <?php
 
-namespace dee\rest;
+namespace dee\rest\base;
 
 use yii\db\Transaction;
 

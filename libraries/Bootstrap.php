@@ -14,6 +14,7 @@ class Bootstrap implements \yii\base\BootstrapInterface
 {
     protected $bootstraps = [
 //        'biz\\api\\Bootstrap',
+        'dee\\angular\\Bootstrap',
     ];
 
     /**

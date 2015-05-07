@@ -1,6 +1,6 @@
 <?php
 
-namespace dee\rest;
+namespace dee\rest\base;
 
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -15,11 +15,6 @@ use yii\web\NotFoundHttpException;
 trait BasicControllerTrait
 {
     /**
-     * @var string the model class name. This property must be set.
-     */
-    public $searchModelClass;
-
-    /**
      * @var string
      */
     public $expandParam;
@@ -28,20 +23,15 @@ trait BasicControllerTrait
      * Lists all models.
      * @return mixed
      */
-    public function actionIndex()
+    public function query()
     {
         /* @var $modelClass ActiveRecord */
-        if ($this->searchModelClass !== null) {
-            $modelClass = $this->searchModelClass;
-            $model = new $modelClass;
-            $dataProvider = $model->search(Yii::$app->request->getQueryParams());
-        } else {
-            $modelClass = $this->modelClass;
-            $query = $modelClass::find();
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query,
-            ]);
-        }
+        $modelClass = $this->modelClass;
+        $query = $modelClass::find();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
         return $dataProvider;
     }
 
@@ -50,14 +40,14 @@ trait BasicControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function view($id)
     {
         $model = $this->findModel($id);
-        if ($this->expandParam && ($attr = Yii::$app->request->getQueryParam($this->expandParam))!==null) {
+        if ($this->expandParam && ($attr = Yii::$app->request->getQueryParam($this->expandParam)) !== null) {
             $definition = array_merge($model->fields(), $model->extraFields());
-            if(isset($definition[$attr])){
+            if (isset($definition[$attr])) {
                 return is_string($definition[$attr]) ? $model->{$definition[$attr]} : call_user_func($definition[$attr], $model, $attr);
-            }elseif (in_array($attr, $definition)) {
+            } elseif (in_array($attr, $definition)) {
                 return $model->$attr;
             }
             throw new NotFoundHttpException("Object not found: $id/$attr");
@@ -70,7 +60,7 @@ trait BasicControllerTrait
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function create()
     {
         /* @var $model ActiveRecord */
         $model = $this->createModel();
@@ -85,7 +75,7 @@ trait BasicControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function update($id)
     {
         $model = $this->findModel($id);
 
@@ -100,7 +90,7 @@ trait BasicControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function actionPatch($id)
+    public function patch($id)
     {
         $model = $this->findModel($id);
 
@@ -118,7 +108,7 @@ trait BasicControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function delete($id)
     {
         $model = $this->findModel($id);
         return $model->delete();

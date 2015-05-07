@@ -1,6 +1,6 @@
 <?php
 
-namespace dee\rest;
+namespace dee\rest\base;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -13,17 +13,18 @@ use yii\web\NotFoundHttpException;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Controller extends \yii\rest\Controller
+class Controller extends \yii\web\Controller
 {
-    /**
-     * @var string|array the configuration for creating the serializer that formats the response data.
-     */
-    public $serializer = 'dee\rest\Serializer';
     /**
      * @var string the model class name. This property must be set.
      */
     public $modelClass;
-    
+
+    /**
+     * @inheritdoc
+     */
+    public $enableCsrfValidation = false;
+
     /**
      * @inheritdoc
      */
@@ -38,15 +39,12 @@ class Controller extends \yii\rest\Controller
     /**
      * @inheritdoc
      */
-    protected function verbs()
+    public function actions()
     {
-        return [
-            'index' => ['GET', 'HEAD'],
-            'view' => ['GET', 'HEAD'],
-            'create' => ['POST'],
-            'update' => ['POST', 'PUT'],
-            'patch' => ['PATCH'],
-            'delete' => ['DELETE'],
+        return[
+            'resource' => [
+                'class' => 'dee\rest\RestAction',
+            ]
         ];
     }
 
@@ -63,13 +61,9 @@ class Controller extends \yii\rest\Controller
         $modelClass = $this->modelClass;
         $keys = $modelClass::primaryKey();
         if (count($keys) > 1) {
-            if (is_array($id)) {
-                $model = $modelClass::findOne($id);
-            } else {
-                $values = explode(',', $id);
-                if (count($keys) === count($values)) {
-                    $model = $modelClass::findOne(array_combine($keys, $values));
-                }
+            $values = explode(',', $id);
+            if (count($keys) === count($values)) {
+                $model = $modelClass::findOne(array_combine($keys, $values));
             }
         } elseif ($id !== null) {
             $model = $modelClass::findOne($id);
@@ -78,7 +72,7 @@ class Controller extends \yii\rest\Controller
         if (isset($model)) {
             return $model;
         } else {
-            throw new NotFoundHttpException("Object not found: ".  json_encode($id));
+            throw new NotFoundHttpException("Object not found: '$id'");
         }
     }
 

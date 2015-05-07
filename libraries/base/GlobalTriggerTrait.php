@@ -18,6 +18,11 @@ trait GlobalTriggerTrait
     public $prefixEventName;
 
     /**
+     * @var string
+     */
+    protected $prefixEventHandler = 'ee';
+
+    /**
      * Trigger global event
      * @param string $name
      * @param array $params
@@ -28,8 +33,11 @@ trait GlobalTriggerTrait
             $reflector = new \ReflectionClass($this);
             $this->prefixEventName = 'e' . $reflector->getShortName();
         }
+        
         $event = new Event($params);
-        $this->trigger($name, $event);
+        if (method_exists($this, $this->prefixEventHandler . $name)) {
+            call_user_func([$this, $this->prefixEventHandler . $name], $event);
+        }
         Yii::$app->trigger($this->prefixEventName . ucfirst($name), $event);
     }
 }
