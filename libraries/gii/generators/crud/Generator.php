@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace mdm\gii\generators\crud;
+namespace dee\gii\generators\crud;
 
 use Yii;
 use yii\web\Controller;
@@ -23,14 +23,15 @@ use yii\db\BaseActiveRecord;
 class Generator extends \yii\gii\generators\crud\Generator
 {
     public $controllerID;
-    public $module;
+    private $_viewPath;
+    private $_controllerClass;
 
     /**
      * @inheritdoc
      */
     public function getName()
     {
-        return 'MDM CRUD Generator';
+        return 'Dee CRUD Generator';
     }
 
     /**
@@ -123,21 +124,21 @@ class Generator extends \yii\gii\generators\crud\Generator
      */
     public function getViewPath()
     {
-        if ($this->viewPath === null) {
-            $this->module = Yii::$app;
+        if ($this->_viewPath === null) {
+            $module = Yii::$app;
             $id = $this->controllerID;
             while (($pos = strpos($id, '/')) !== false) {
                 $mId = substr($id, 0, $pos);
-                if (($m = $this->module->getModule($mId)) !== null) {
-                    $this->module = $m;
+                if (($m = $module->getModule($mId)) !== null) {
+                    $module = $m;
                     $id = substr($id, $pos + 1);
                 } else {
                     break;
                 }
             }
-            $this->viewPath = $this->module->getViewPath() . '/' . $id;
+            $this->_viewPath = $module->getViewPath() . '/' . $id;
         }
-        return $this->viewPath;
+        return $this->_viewPath;
     }
 
     /**
@@ -156,19 +157,19 @@ class Generator extends \yii\gii\generators\crud\Generator
      */
     public function getControllerClass()
     {
-        if ($this->controllerClass === null) {
-            $this->module = Yii::$app;
+        if ($this->_controllerClass === null) {
+            $module = Yii::$app;
             $id = $this->controllerID;
             while (($pos = strpos($id, '/')) !== false) {
                 $mId = substr($id, 0, $pos);
-                if (($m = $this->module->getModule($mId)) !== null) {
-                    $this->module = $m;
+                if (($m = $module->getModule($mId)) !== null) {
+                    $module = $m;
                     $id = substr($id, $pos + 1);
                 } else {
                     break;
                 }
             }
-            $this->viewPath = $this->module->getViewPath() . '/' . $id;
+            $this->_viewPath = $module->getViewPath() . '/' . $id;
     
             $pos = strrpos($id, '/');
             if ($pos === false) {
@@ -180,9 +181,9 @@ class Generator extends \yii\gii\generators\crud\Generator
             }
 
             $className = str_replace(' ', '', ucwords(str_replace('-', ' ', $className))) . 'Controller';
-            $className = ltrim($this->module->controllerNamespace . '\\' . str_replace('/', '\\', $prefix) . $className, '\\');
-            $this->controllerClass = $className;
+            $className = ltrim($module->controllerNamespace . '\\' . str_replace('/', '\\', $prefix) . $className, '\\');
+            $this->_controllerClass = $className;
         }
-        return $this->controllerClass;
+        return $this->_controllerClass;
     }
 }

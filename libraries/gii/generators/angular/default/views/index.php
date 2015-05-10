@@ -3,7 +3,7 @@
 use yii\helpers\Inflector;
 
 /* @var $this yii\web\View */
-/* @var $generator dee\angular\generators\crud\Generator */
+/* @var $generator dee\gii\generators\angular\Generator */
 
 $class = $generator->modelClass;
 $pks = $class::primaryKey();

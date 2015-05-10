@@ -11,13 +11,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require mdmsoft/yii2-gii "~1.0"
+php composer.phar require deesoft/yii2-gii "~1.0"
 ```
 
 or add
 
 ```
-"mdmsoft/yii2-gii": "~1.0"
+"deesoft/yii2-gii": "~1.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -38,9 +38,10 @@ if (!YII_ENV_TEST) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         'generators' => [
-            'crud' => ['class' => 'mdm\gii\generators\crud\Generator'],
-            'mvc' => ['class' => 'mdm\gii\generators\mvc\Generator'],
-            'migration' => ['class' => 'mdm\gii\generators\migration\Generator'],
+            'crud' => ['class' => 'dee\gii\generators\crud\Generator'],
+            'angular' => ['class' => 'dee\gii\generators\angular\Generator'],
+            'mvc' => ['class' => 'dee\gii\generators\mvc\Generator'],
+            'migration' => ['class' => 'dee\gii\generators\migration\Generator'],
         ]
     ];
 }

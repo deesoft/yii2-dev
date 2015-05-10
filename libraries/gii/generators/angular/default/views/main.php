@@ -7,7 +7,7 @@ use yii\helpers\StringHelper;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $generator dee\angular\generators\crud\Generator */
+/* @var $generator dee\gii\generators\angular\Generator */
 
 $restName = StringHelper::basename($generator->modelClass);
 $resourceUrl = '/' . $generator->controllerID . '/resource';

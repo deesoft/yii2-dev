@@ -6,7 +6,7 @@
 use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator dee\angular\generators\crud\Generator */
+/* @var $generator dee\gii\generators\angular\Generator */
 
 $restName = StringHelper::basename($generator->modelClass);
 ?>

@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace mdm\gii\generators\mvc;
+namespace dee\gii\generators\mvc;
 
 use Yii;
 use yii\gii\CodeFile;
@@ -42,12 +42,6 @@ class Generator extends \yii\gii\Generator
     public $modelClass;
 
     /**
-     *
-     * @var string module ID
-     */
-    public $moduleID;
-
-    /**
      * @var string list of action IDs separated by commas or spaces
      */
     public $actions = 'index';
@@ -62,13 +56,15 @@ class Generator extends \yii\gii\Generator
      * @var string 
      */
     public $scenarioName;
+    private $_viewPath;
+    private $_controllerClass;
 
     /**
      * @inheritdoc
      */
     public function getName()
     {
-        return 'MDM MVC Generator';
+        return 'Dee MVC Generator';
     }
 
     /**
@@ -86,7 +82,7 @@ class Generator extends \yii\gii\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['moduleID', 'controllerID', 'actions', 'formActions', 'baseControllerClass'], 'filter', 'filter' => 'trim'],
+            [['controllerID', 'actions', 'formActions', 'baseControllerClass'], 'filter', 'filter' => 'trim'],
             [['controllerID', 'baseControllerClass'], 'required'],
             [['controllerID'], 'match', 'pattern' => '/^[a-z][a-z0-9\\-\\/]*$/', 'message' => 'Only a-z, 0-9, dashes (-) and slashes (/) are allowed.'],
             [['actions', 'formActions'], 'match', 'pattern' => '/^[a-z][a-z0-9\\-,\\s]*$/', 'message' => 'Only a-z, 0-9, dashes (-), spaces and commas are allowed.'],
@@ -94,21 +90,7 @@ class Generator extends \yii\gii\Generator
             [['baseControllerClass'], 'validateClass', 'params' => ['extends' => Controller::className()]],
             [['scenarioName'], 'match', 'pattern' => '/^[\w\\-]+$/', 'message' => 'Only word characters and dashes are allowed.'],
             [['modelClass'], 'validateClass', 'params' => ['extends' => Model::className()]],
-            [['moduleID'], 'validateModuleID'],
         ]);
-    }
-
-    /**
-     * Checks if model ID is valid
-     */
-    public function validateModuleID()
-    {
-        if (!empty($this->moduleID)) {
-            $module = Yii::$app->getModule($this->moduleID);
-            if ($module === null) {
-                $this->addError('moduleID', "Module '{$this->moduleID}' does not exist.");
-            }
-        }
     }
 
     /**
@@ -120,7 +102,6 @@ class Generator extends \yii\gii\Generator
             'baseControllerClass' => 'Base Controller Class',
             'controllerID' => 'Controller ID',
             'actions' => 'Action IDs',
-            'moduleID' => 'Module ID',
             'formActions' => 'Form Action IDs',
             'scenarioName' => 'Scenario',
         ];
@@ -142,7 +123,7 @@ class Generator extends \yii\gii\Generator
      */
     public function stickyAttributes()
     {
-        return ['moduleID', 'baseControllerClass'];
+        return ['baseControllerClass'];
     }
 
     /**
@@ -171,8 +152,6 @@ class Generator extends \yii\gii\Generator
                     <li><code>update</code> generates <code>actionUpdate()</code></li>
                     <li><code>create-order</code> generates <code>actionCreateOrder()</code></li>
                 </ul>',
-            'moduleID' => 'This is the ID of the module that the generated controller will belong to.
-                If not set, it means the controller will belong to the application.',
             'baseControllerClass' => 'This is the class that the new controller class will extend from. Please make sure the class exists and can be autoloaded.',
         ];
     }
@@ -188,9 +167,6 @@ class Generator extends \yii\gii\Generator
         } else {
             $route = '/' . $this->controllerID . '/' . reset($actions);
         }
-        if (!empty($this->moduleID)) {
-            $route = '/' . $this->moduleID . $route;
-        }
         $link = Html::a('try it now', [$route], ['target' => '_blank']);
 
         return "The controller has been generated successfully. You may $link.";
@@ -203,7 +179,7 @@ class Generator extends \yii\gii\Generator
     {
         $files = [];
 
-        $controllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->controllerClass, '\\')) . '.php');
+        $controllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->getControllerClass(), '\\')) . '.php');
 
         $files[] = new CodeFile($controllerFile, $this->render('controller.php'));
 
@@ -254,21 +230,34 @@ class Generator extends \yii\gii\Generator
      */
     public function getControllerClass()
     {
-        $module = empty($this->moduleID) ? Yii::$app : Yii::$app->getModule($this->moduleID);
-        $id = $this->controllerID;
-        $pos = strrpos($id, '/');
-        if ($pos === false) {
-            $prefix = '';
-            $className = $id;
-        } else {
-            $prefix = substr($id, 0, $pos + 1);
-            $className = substr($id, $pos + 1);
+        if ($this->_controllerClass === null) {
+            $module = Yii::$app;
+            $id = $this->controllerID;
+            while (($pos = strpos($id, '/')) !== false) {
+                $mId = substr($id, 0, $pos);
+                if (($m = $module->getModule($mId)) !== null) {
+                    $module = $m;
+                    $id = substr($id, $pos + 1);
+                } else {
+                    break;
+                }
+            }
+            $this->_viewPath = $module->getViewPath() . '/' . $id;
+
+            $pos = strrpos($id, '/');
+            if ($pos === false) {
+                $prefix = '';
+                $className = $id;
+            } else {
+                $prefix = substr($id, 0, $pos + 1);
+                $className = substr($id, $pos + 1);
+            }
+
+            $className = str_replace(' ', '', ucwords(str_replace('-', ' ', $className))) . 'Controller';
+            $className = ltrim($module->controllerNamespace . '\\' . str_replace('/', '\\', $prefix) . $className, '\\');
+            $this->_controllerClass = $className;
         }
-
-        $className = str_replace(' ', '', ucwords(str_replace('-', ' ', $className))) . 'Controller';
-        $className = ltrim($module->controllerNamespace . '\\' . str_replace('/', '\\', $prefix) . $className, '\\');
-
-        return $className;
+        return $this->_controllerClass;
     }
 
     /**
@@ -276,9 +265,21 @@ class Generator extends \yii\gii\Generator
      */
     public function getViewPath()
     {
-        $module = empty($this->moduleID) ? Yii::$app : Yii::$app->getModule($this->moduleID);
-
-        return $module->getViewPath() . '/' . $this->controllerID;
+        if ($this->_viewPath === null) {
+            $module = Yii::$app;
+            $id = $this->controllerID;
+            while (($pos = strpos($id, '/')) !== false) {
+                $mId = substr($id, 0, $pos);
+                if (($m = $module->getModule($mId)) !== null) {
+                    $module = $m;
+                    $id = substr($id, $pos + 1);
+                } else {
+                    break;
+                }
+            }
+            $this->_viewPath = $module->getViewPath() . '/' . $id;
+        }
+        return $this->_viewPath;
     }
 
     /**

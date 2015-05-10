@@ -1,12 +1,12 @@
 {
-	"name": "mdmsoft/yii2-gii",
+	"name": "deesoft/yii2-gii",
 	"description": "Yii2 custom generator for gii",
 	"keywords": ["yii2", "gii"],
 	"type": "yii2-extension",
 	"license": "BSD-3-Clause",
 	"support": {
-		"issues": "https://github.com/mdmsoft/yii2-gii/issues",
-		"source": "https://github.com/mdmsoft/yii2-gii"
+		"issues": "https://github.com/deesoft/yii2-gii/issues",
+		"source": "https://github.com/deesoft/yii2-gii"
 	},
 	"authors": [
 		{

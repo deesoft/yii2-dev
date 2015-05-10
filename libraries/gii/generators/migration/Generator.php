@@ -1,6 +1,6 @@
 <?php
 
-namespace mdm\gii\generators\migration;
+namespace dee\gii\generators\migration;
 
 use Yii;
 use yii\db\Connection;

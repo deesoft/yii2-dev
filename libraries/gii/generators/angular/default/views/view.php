@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $generator dee\angular\generators\crud\Generator */
+/* @var $generator dee\gii\generators\angular\Generator */
 
 /* @var $model \yii\db\ActiveRecord */
 $model = new $generator->modelClass();
