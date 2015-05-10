@@ -17,8 +17,12 @@
     },
     "minimum-stability": "dev",
     "replace": {
-        "mdmsoft/yii2-gii": "self.version",
+        "deesoft/yii2-gii": "self.version",
         "deesoft/yii2-console": "self.version",
+        "deesoft/yii2-angular": "self.version",
+        "deesoft/yii2-rest": "self.version",
+        "deesoft/yii2-rest-base": "self.version",
+        "deesoft/yii2-base": "self.version",
         "deesoft/yii2-easyui": "self.version"
     },
     "require": {
@@ -48,14 +52,15 @@
     },
     "autoload": {
         "psr-4": {
-            "mdm\\gii\\": "libraries/gii",
+            "dee\\gii\\": "libraries/gii",
             "dee\\easyui\\": "libraries/easyui",
             "dee\\console\\": "libraries/console",
             "dee\\base\\": "libraries/base",
             "dee\\rest\\": "libraries/rest",
-            "biz\\api\\": "libraries/biz-api",
+            "dee\\rest\\base\\": "libraries/rest-base",
             "dee\\angular\\": "libraries/angular",
-            "dee\\adminlte\\": "libraries/adminlte"
+            "dee\\adminlte\\": "libraries/adminlte",
+            "biz\\api\\": "libraries/biz-api"
         },
         "psr-0":{
             "libraries\\Bootstrap":""
