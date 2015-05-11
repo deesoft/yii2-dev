@@ -20,7 +20,7 @@ trait GlobalTriggerTrait
     /**
      * @var string
      */
-    protected $prefixEventHandler = 'ee';
+    protected $prefixEventHandler = 'e';
 
     /**
      * Trigger global event

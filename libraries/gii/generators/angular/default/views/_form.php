@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator dee\gii\generators\angular\Generator */
@@ -21,7 +22,7 @@ use dee\angular\Angular;
 
 ?>
 
-<div class="<?= $generator->controllerID ?>-form">
+<div class="<?= StringHelper::basename($generator->controllerID) ?>-form">
     <form name="Form" d-errors="errors">
         <div ng-if="errors.status">
             <h1>Error {{errors.status}}: {{errors.text}}</h1>

@@ -1,5 +1,7 @@
 <?php
 
+use yii\helpers\StringHelper;
+
 /* @var $this yii\web\View */
 /* @var $generator dee\gii\generators\angular\Generator */
 
@@ -14,7 +16,7 @@ use yii\helpers\Html;
 Angular::renderScript('js/update.js');
 ?>
 
-<div class="<?= $generator->controllerID ?>-update">
+<div class="<?= StringHelper::basename($generator->controllerID) ?>-update">
 
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 

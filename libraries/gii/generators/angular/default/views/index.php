@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
 /* @var $generator dee\gii\generators\angular\Generator */
@@ -22,7 +23,7 @@ Angular::renderScript('js/index.js');
 Angular::requires(['dee.angular']);
 ?>
 
-<div class="<?= $generator->controllerID ?>-index">
+<div class="<?= StringHelper::basename($generator->controllerID) ?>-index">
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
     <p>
         <?= "<?= " ?>Html::a('Create', '#/create', ['class' => 'btn btn-success']) ?>
