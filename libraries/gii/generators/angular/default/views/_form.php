@@ -20,6 +20,7 @@ use dee\angular\Angular;
 /* @var $this yii\web\View */
 /* @var $angular Angular */
 
+$angular->renderJs('js/form.js');
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-form">

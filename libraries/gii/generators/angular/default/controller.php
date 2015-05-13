@@ -57,7 +57,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         return [
             'resource' => [
-                'class' => 'dee\angular\RestAction',
+                'class' => 'dee\rest\RestAction',
             ]
         ];
     }
