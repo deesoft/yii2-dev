@@ -13,7 +13,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $angular Angular */
 
-Angular::renderScript('js/create.js');
+$angular->renderJs('js/create.js');
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-create">

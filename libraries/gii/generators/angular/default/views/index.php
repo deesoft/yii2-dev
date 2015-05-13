@@ -19,8 +19,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $angular Angular */
 
-Angular::renderScript('js/index.js');
-Angular::requires(['dee.angular']);
+$angular->renderJs('js/index.js');
+$angular->requires(['dee.angular']);
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-index">

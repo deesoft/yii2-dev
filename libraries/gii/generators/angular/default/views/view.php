@@ -16,7 +16,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $angular Angular */
 
-Angular::renderScript('js/view.js');
+$angular->renderJs('js/view.js');
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-view">
