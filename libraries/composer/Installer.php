@@ -36,7 +36,7 @@ class Installer extends LibraryInstaller
             $extension['alias'] = $alias;
         }
         $extra = $package->getExtra();
-        
+
         if (isset($extra[self::EXTRA_BOOTSTRAP])) {
             $bootstrap = $extra[self::EXTRA_BOOTSTRAP];
             if (is_array($bootstrap)) {
@@ -46,15 +46,13 @@ class Installer extends LibraryInstaller
                 $extension['bootstrap'] = $bootstrap;
             }
         }
-        
+
         $extensions = $this->loadExtensions();
         $extensions[$package->getName()] = $extension;
         $this->saveExtensions($extensions);
 
-        if ($event && $event->getName() == ScriptEvents::POST_INSTALL_CMD) {
-            $this->generateSymlink($package);
-            $this->setPermission($package);
-        }
+        $this->generateSymlink($package);
+        $this->setPermission($package);
     }
 
     protected function generateDefaultAlias(PackageInterface $package)

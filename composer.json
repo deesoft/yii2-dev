@@ -82,7 +82,8 @@
         },
         "symlinks": {
             "application/vendor": "vendor",
-            "init": "application/init"
+            "init": "application/init",
+            "yii": "application/yii"
         }
     }
 }
