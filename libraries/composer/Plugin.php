@@ -23,8 +23,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $io->write(__METHOD__ . " " . $composer->getPackage()->getName());
-        $composer->getEventDispatcher()->addSubscriber($this);
+//        $composer->getEventDispatcher()->addSubscriber($this);
     }
 
     /**
