@@ -19,7 +19,7 @@ class Bootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        $file = Yii::getAlias('@vendor/yiisoft/dee_bootstrap.php');
+        $file = Yii::getAlias('@vendor/' . Installer::BOOTSTRAP_FILE);
         $bootstraps = is_file($file) ? include($file) : [];
 
         foreach ($bootstraps as $bootstrap) {

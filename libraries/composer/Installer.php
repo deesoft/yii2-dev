@@ -18,7 +18,7 @@ class Installer extends LibraryInstaller
 {
     const EXTRA_BOOTSTRAP = 'bootstrap';
     const EXTENSION_FILE = 'yiisoft/extensions.php';
-    const BOOTSTRAP_FILE = 'yiisoft/dee_bootstrap.php';
+    const BOOTSTRAP_FILE = 'deesoft/bootstrap.php';
     const EXTRA_SYMLINK = 'symlinks';
     const EXTRA_PERMISSION = 'permission';
 
