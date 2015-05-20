@@ -31,6 +31,7 @@ class Installer extends LibraryInstaller
             'version' => $package->getVersion(),
         ];
 
+        echo $event->getName()."\n";
         $alias = $this->generateDefaultAlias($package);
         if (!empty($alias)) {
             $extension['alias'] = $alias;
