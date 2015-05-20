@@ -18,6 +18,7 @@ class Installer extends LibraryInstaller
 {
     const EXTRA_BOOTSTRAP = 'bootstrap';
     const EXTENSION_FILE = 'yiisoft/extensions.php';
+    const BOOTSTRAP_FILE = 'yiisoft/dee_bootstrap.php';
     const EXTRA_SYMLINK = 'symlinks';
     const EXTRA_PERMISSION = 'permission';
 
@@ -35,9 +36,17 @@ class Installer extends LibraryInstaller
             $extension['alias'] = $alias;
         }
         $extra = $package->getExtra();
+        
         if (isset($extra[self::EXTRA_BOOTSTRAP])) {
-            $extension['bootstrap'] = $extra[self::EXTRA_BOOTSTRAP];
+            $bootstrap = $extra[self::EXTRA_BOOTSTRAP];
+            if (is_array($bootstrap)) {
+                $extension['bootstrap'] = __NAMESPACE__ . '\Bootstrap';
+                $this->saveBootstrap($bootstrap);
+            } else {
+                $extension['bootstrap'] = $bootstrap;
+            }
         }
+        
         $extensions = $this->loadExtensions();
         $extensions[$package->getName()] = $extension;
         $this->saveExtensions($extensions);
@@ -155,6 +164,22 @@ return $array;
 
 FILE;
         file_put_contents($file, $content);
+        // invalidate opcache of extensions.php if exists
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($file, true);
+        }
+    }
+
+    protected function saveBootstrap($bootstrap)
+    {
+        $file = $this->vendorDir . '/' . self::BOOTSTRAP_FILE;
+        if (!file_exists(dirname($file))) {
+            mkdir(dirname($file), 0777, true);
+        }
+        $array = var_export($bootstrap, true);
+        $content = "<?php\nreturn $array;";
+        file_put_contents($file, $content);
+
         // invalidate opcache of extensions.php if exists
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($file, true);
