@@ -194,11 +194,12 @@ FILE;
                 if (!$fs->isAbsolutePath($dest)) {
                     $dest = $baseDir . '/' . $dest;
                 }
+                if (!$fs->isAbsolutePath($src)) {
+                    $src = $baseDir . '/' . $src;
+                }
+
                 echo "symlink('$src', '$dest')...";
                 if (!is_dir($dest) && !is_file($dest)) {
-                    if (!$fs->isAbsolutePath($src)) {
-                        $src = $baseDir . '/' . $src;
-                    }
                     symlink($src, $dest);
                     echo "done.\n";
                 } else {
