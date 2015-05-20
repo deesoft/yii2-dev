@@ -31,7 +31,6 @@ class Installer extends LibraryInstaller
             'version' => $package->getVersion(),
         ];
 
-        echo $event->getName()."\n";
         $alias = $this->generateDefaultAlias($package);
         if (!empty($alias)) {
             $extension['alias'] = $alias;
@@ -192,14 +191,13 @@ FILE;
             $fs = new Filesystem;
             $baseDir = $this->baseDir;
             foreach ($extra[self::EXTRA_SYMLINK] as $dest => $src) {
+                echo "symlink('$src', '$dest')...";
                 if (!$fs->isAbsolutePath($dest)) {
                     $dest = $baseDir . '/' . $dest;
                 }
                 if (!$fs->isAbsolutePath($src)) {
                     $src = $baseDir . '/' . $src;
                 }
-
-                echo "symlink('$src', '$dest')...";
                 if (!is_dir($dest) && !is_file($dest)) {
                     symlink($src, $dest);
                     echo "done.\n";

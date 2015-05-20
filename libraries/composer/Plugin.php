@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
-
 namespace dee\composer;
 
 use Composer\Composer;
@@ -29,6 +23,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
+        echo __METHOD__ . " " . $composer->getPackage()->getName() . "\n";
         $composer->getEventDispatcher()->addSubscriber($this);
     }
 
