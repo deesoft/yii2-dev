@@ -36,3 +36,4 @@ phpunit.phar
 /push.sh
 /pull.sh
 /init
+/yii
