@@ -48,7 +48,9 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
         $this->saveExtensions($extensions);
 
         $this->generateSymlink($package);
-        $this->setPermission($package);
+        if (isset($extra[self::EXTRA_SYMLINK])) {
+            static::setPermission($extra[self::EXTRA_SYMLINK]);
+        }
     }
 
     protected function generatePackagetAlias(PackageInterface $package)
@@ -155,27 +157,6 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
                     echo "done.\n";
                 } else {
                     echo "file destination exists.\n";
-                }
-            }
-        }
-    }
-
-    protected function setPermission(PackageInterface $package)
-    {
-        $extra = $package->getExtra();
-        if (isset($extra[self::EXTRA_PERMISSION])) {
-            $fs = new Filesystem;
-            $baseDir = $this->baseDir;
-            foreach ($extra[self::EXTRA_PERMISSION] as $path => $permission) {
-                if (!$fs->isAbsolutePath($path)) {
-                    $path = $baseDir . '/' . $path;
-                }
-                echo "chmod('$path', $permission)...";
-                if (is_dir($path) || is_file($path)) {
-                    chmod($path, octdec($permission));
-                    echo "done.\n";
-                } else {
-                    echo "file not found.\n";
                 }
             }
         }
