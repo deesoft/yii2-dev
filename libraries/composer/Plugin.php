@@ -22,5 +22,6 @@ class Plugin implements PluginInterface
     {
         $installer = new Installer($io, $composer);
         $composer->getEventDispatcher()->addSubscriber($installer);
+        echo "versi 1\n";
     }
 }
