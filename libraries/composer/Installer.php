@@ -48,8 +48,8 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
         $this->saveExtensions($extensions);
 
         $this->generateSymlink($package);
-        if (isset($extra[self::EXTRA_SYMLINK])) {
-            static::setPermission($extra[self::EXTRA_SYMLINK]);
+        if (isset($extra[self::EXTRA_PERMISSION])) {
+            static::setPermission($extra[self::EXTRA_PERMISSION]);
         }
     }
 
