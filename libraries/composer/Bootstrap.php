@@ -11,21 +11,28 @@ use yii\base\BootstrapInterface;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Bootstrap implements BootstrapInterface
+class Bootstrap
 {
 
     /**
      * @param \yii\base\Application $app
      */
-    public function bootstrap($app)
+    public static function run($app)
     {
-        $file = Yii::getAlias('@vendor/deesoft/bootstrap.php');
-        $bootstraps = is_file($file) ? include($file) : [];
+        $file = Yii::getAlias('@vendor/deesoft/root_package.php');
+        $package = is_file($file) ? include($file) : [];
 
-        foreach ($bootstraps as $bootstrap) {
-            $component = Yii::createObject($bootstrap);
-            if ($component instanceof BootstrapInterface) {
-                $component->bootstrap($app);
+        if (!empty($package['alias'])) {
+            foreach ($package['alias'] as $name => $path) {
+                Yii::setAlias($name, $path);
+            }
+        }
+        if (isset($package['bootstrap'])) {
+            foreach ((array) $package['bootstrap'] as $bootstrap) {
+                $component = Yii::createObject($bootstrap);
+                if ($component instanceof BootstrapInterface) {
+                    $component->bootstrap($app);
+                }
             }
         }
     }

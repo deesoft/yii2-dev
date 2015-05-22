@@ -16,62 +16,42 @@ use Composer\EventDispatcher\EventSubscriberInterface;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Installer implements EventSubscriberInterface
+class Installer extends \yii\composer\Installer implements EventSubscriberInterface
 {
-    const EXTRA_BOOTSTRAP = 'bootstrap';
-    const EXTENSION_FILE = 'yiisoft/extensions.php';
-    const BOOTSTRAP_FILE = 'deesoft/bootstrap.php';
+    const PACKAGE_FILE = 'deesoft/root_package.php';
     const EXTRA_SYMLINK = 'symlinks';
     const EXTRA_PERMISSION = 'permission';
 
     protected $baseDir;
-    protected $vendorDir;
-    protected $composer;
-    protected $io;
 
-    public function __construct(IOInterface $io, Composer $composer)
+    protected function setRootPackage(PackageInterface $package, CommandEvent $event = null)
     {
         $fs = new Filesystem;
-        $this->io = $io;
-        $this->composer = $composer;
-
         $this->baseDir = $fs->normalizePath(realpath(getcwd()));
-        $this->vendorDir = rtrim($composer->getConfig()->get('vendor-dir'), '/');
-        $this->vendorDir = realpath($this->vendorDir);
-    }
-
-    protected function addPackage(PackageInterface $package, CommandEvent $event = null)
-    {
-        $extension = [
+        $info = [
             'name' => $package->getName(),
             'version' => $package->getVersion(),
         ];
 
-        $alias = $this->generateDefaultAlias($package);
+        $alias = $this->generatePackagetAlias($package);
         if (!empty($alias)) {
-            $extension['alias'] = $alias;
+            $info['alias'] = $alias;
         }
         $extra = $package->getExtra();
 
         if (isset($extra[self::EXTRA_BOOTSTRAP])) {
-            $bootstrap = $extra[self::EXTRA_BOOTSTRAP];
-            if (is_array($bootstrap)) {
-                $extension['bootstrap'] = __NAMESPACE__ . '\Bootstrap';
-                $this->saveBootstrap($bootstrap);
-            } else {
-                $extension['bootstrap'] = $bootstrap;
-            }
+            $info['bootstrap'] = $extra[self::EXTRA_BOOTSTRAP];
         }
+        $this->savePackage($info);
 
         $extensions = $this->loadExtensions();
-        $extensions[$package->getName()] = $extension;
         $this->saveExtensions($extensions);
 
         $this->generateSymlink($package);
         $this->setPermission($package);
     }
 
-    protected function generateDefaultAlias(PackageInterface $package)
+    protected function generatePackagetAlias(PackageInterface $package)
     {
         $fs = new Filesystem;
         $autoload = $package->getAutoload();
@@ -112,33 +92,34 @@ class Installer implements EventSubscriberInterface
         return $aliases;
     }
 
-    protected function loadExtensions()
+    protected function savePackage($info)
     {
-        $file = $this->vendorDir . '/' . self::EXTENSION_FILE;
-        if (!is_file($file)) {
-            return [];
+        $file = $this->vendorDir . '/' . self::PACKAGE_FILE;
+        if (!file_exists(dirname($file))) {
+            mkdir(dirname($file), 0777, true);
         }
+        $baseDir = $this->baseDir;
+        if (strpos($this->vendorDir . '/', $baseDir . '/') === 0) {
+            $child = substr($this->vendorDir, strlen($baseDir));
+            if (strpos($child, '..') === false) {
+                $c = substr_count($child, '/');
+                $dir = 'dirname(__DIR__)';
+                for ($i = 0; $i < $c; $i++) {
+                    $dir = "dirname($dir)";
+                }
+            } else {
+                $dir = var_export($this->baseDir, true);
+            }
+        } else {
+            $dir = var_export($this->baseDir, true);
+        }
+        $array = var_export($info, true);
+        $array = str_replace("'<base-dir>", '$baseDir . \'', $array);
+        file_put_contents($file, "<?php\n\n\$baseDir = $dir;\n\nreturn $array;");
         // invalidate opcache of extensions.php if exists
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($file, true);
         }
-        $extensions = require($file);
-
-        $vendorDir = str_replace('\\', '/', $this->vendorDir);
-        $n = strlen($vendorDir);
-
-        foreach ($extensions as &$extension) {
-            if (isset($extension['alias'])) {
-                foreach ($extension['alias'] as $alias => $path) {
-                    $path = str_replace('\\', '/', $path);
-                    if (strpos($path . '/', $vendorDir . '/') === 0) {
-                        $extension['alias'][$alias] = '<vendor-dir>' . substr($path, $n);
-                    }
-                }
-            }
-        }
-
-        return $extensions;
     }
 
     protected function saveExtensions(array $extensions)
@@ -147,50 +128,8 @@ class Installer implements EventSubscriberInterface
         if (!file_exists(dirname($file))) {
             mkdir(dirname($file), 0777, true);
         }
-        $baseDir = $this->baseDir;
-        if (strpos($this->vendorDir . '/', $baseDir . '/') === 0) {
-            $ch = substr($this->vendorDir, strlen($baseDir));
-            if (strpos($ch, '..') === false) {
-                $c = substr_count($ch, '/');
-                $dir = '$vendorDir';
-                for ($i = 0; $i < $c; $i++) {
-                    $dir = "dirname($dir)";
-                }
-            } else {
-                $dir = var_export($this->vendorDir, true);
-            }
-        } else {
-            $dir = var_export($this->vendorDir, true);
-        }
-        $array = var_export($extensions, true);
-        $array = str_replace("'<vendor-dir>", '$vendorDir . \'', $array);
-        $array = str_replace("'<base-dir>", '$baseDir . \'', $array);
-        $content = <<<FILE
-<?php
-
-\$vendorDir = dirname(__DIR__);
-\$baseDir = $dir;
-
-return $array;
-
-FILE;
-        file_put_contents($file, $content);
-        // invalidate opcache of extensions.php if exists
-        if (function_exists('opcache_invalidate')) {
-            opcache_invalidate($file, true);
-        }
-    }
-
-    protected function saveBootstrap($bootstrap)
-    {
-        $file = $this->vendorDir . '/' . self::BOOTSTRAP_FILE;
-        if (!file_exists(dirname($file))) {
-            mkdir(dirname($file), 0777, true);
-        }
-        $array = var_export($bootstrap, true);
-        $content = "<?php\nreturn $array;";
-        file_put_contents($file, $content);
-
+        $array = str_replace("'<vendor-dir>", '$vendorDir . \'', var_export($extensions, true));
+        file_put_contents($file, "<?php\n\n\dee\composer\Bootstrap::run(\$this);\n\$vendorDir = dirname(__DIR__);\n\nreturn $array;\n");
         // invalidate opcache of extensions.php if exists
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($file, true);
@@ -252,7 +191,7 @@ FILE;
 
     public function apply(CommandEvent $event)
     {
-        $composer = $event->getComposer();
-        $this->addPackage($composer->getPackage(), $event);
+        $package = $event->getComposer()->getPackage();
+        $this->setRootPackage($package, $event);
     }
 }
