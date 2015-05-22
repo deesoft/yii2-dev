@@ -2,11 +2,13 @@
 
 namespace dee\composer;
 
-use Composer\Installer\LibraryInstaller;
+use Composer\Composer;
+use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Composer\Script\CommandEvent;
 use Composer\Script\ScriptEvents;
+use Composer\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Configure
@@ -14,7 +16,7 @@ use Composer\Script\ScriptEvents;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Installer extends LibraryInstaller
+class Installer implements EventSubscriberInterface
 {
     const EXTRA_BOOTSTRAP = 'bootstrap';
     const EXTENSION_FILE = 'yiisoft/extensions.php';
@@ -23,6 +25,20 @@ class Installer extends LibraryInstaller
     const EXTRA_PERMISSION = 'permission';
 
     protected $baseDir;
+    protected $vendorDir;
+    protected $composer;
+    protected $io;
+
+    public function __construct(IOInterface $io, Composer $composer)
+    {
+        $fs = new Filesystem;
+        $this->io = $io;
+        $this->composer = $composer;
+
+        $this->baseDir = $fs->normalizePath(realpath(getcwd()));
+        $this->vendorDir = rtrim($composer->getConfig()->get('vendor-dir'), '/');
+        $this->vendorDir = realpath($this->vendorDir);
+    }
 
     protected function addPackage(PackageInterface $package, CommandEvent $event = null)
     {
@@ -59,9 +75,6 @@ class Installer extends LibraryInstaller
     {
         $fs = new Filesystem;
         $autoload = $package->getAutoload();
-        if ($this->baseDir === null) {
-            $this->baseDir = $fs->normalizePath(realpath(getcwd()));
-        }
         $baseDir = $this->baseDir;
 
         $aliases = [];
@@ -153,11 +166,11 @@ class Installer extends LibraryInstaller
         $array = str_replace("'<vendor-dir>", '$vendorDir . \'', $array);
         $array = str_replace("'<base-dir>", '$baseDir . \'', $array);
         $content = <<<FILE
-<?php 
+<?php
 
 \$vendorDir = dirname(__DIR__);
 \$baseDir = $dir;
-    
+
 return $array;
 
 FILE;
@@ -229,10 +242,17 @@ FILE;
         }
     }
 
-    public static function apply(CommandEvent $event)
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ScriptEvents::POST_INSTALL_CMD => 'apply',
+            ScriptEvents::POST_UPDATE_CMD => 'apply'
+        );
+    }
+
+    public function apply(CommandEvent $event)
     {
         $composer = $event->getComposer();
-        $installer = new static($event->getIO(), $composer);
-        $installer->addPackage($composer->getPackage(), $event);
+        $this->addPackage($composer->getPackage(), $event);
     }
 }
