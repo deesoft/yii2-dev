@@ -11,13 +11,13 @@ use yii\base\BootstrapInterface;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Bootstrap
+class Bootstrap implements BootstrapInterface
 {
 
     /**
      * @param \yii\base\Application $app
      */
-    public static function run($app)
+    public function bootstrap($app)
     {
         $file = Yii::getAlias('@vendor/deesoft/root_package.php');
         $package = is_file($file) ? include($file) : [];

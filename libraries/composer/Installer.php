@@ -2,8 +2,6 @@
 
 namespace dee\composer;
 
-use Composer\Composer;
-use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Composer\Script\CommandEvent;
@@ -16,18 +14,19 @@ use Composer\EventDispatcher\EventSubscriberInterface;
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-class Installer extends \yii\composer\Installer implements EventSubscriberInterface
+class Installer implements EventSubscriberInterface
 {
     const PACKAGE_FILE = 'deesoft/root_package.php';
     const EXTRA_SYMLINK = 'symlinks';
     const EXTRA_PERMISSION = 'permission';
+    const EXTENSION_FILE = 'yiisoft/extensions.php';
+    const EXTRA_BOOTSTRAP = 'bootstrap';
 
     protected $baseDir;
+    protected $vendorDir;
 
-    protected function setRootPackage(PackageInterface $package, CommandEvent $event = null)
+    protected function setRootPackage(PackageInterface $package)
     {
-        $fs = new Filesystem;
-        $this->baseDir = $fs->normalizePath(realpath(getcwd()));
         $info = [
             'name' => $package->getName(),
             'version' => $package->getVersion(),
@@ -43,14 +42,6 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
             $info['bootstrap'] = $extra[self::EXTRA_BOOTSTRAP];
         }
         $this->savePackage($info);
-
-        $extensions = $this->loadExtensions();
-        $this->saveExtensions($extensions);
-
-        $this->generateSymlink($package);
-        if (isset($extra[self::EXTRA_PERMISSION])) {
-            static::setPermission($extra[self::EXTRA_PERMISSION]);
-        }
     }
 
     protected function generatePackagetAlias(PackageInterface $package)
@@ -124,6 +115,65 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
         }
     }
 
+    public static function generateSymlink(array $links)
+    {
+        foreach ($links as $dest => $src) {
+            echo "symlink('$src', '$dest')...";
+            if (!is_dir($dest) && !is_file($dest)) {
+                symlink($src, $dest);
+                echo "done.\n";
+            } else {
+                echo "file destination exists.\n";
+            }
+        }
+    }
+
+    /**
+     * Sets the correct permission for the files and directories listed in the extra section.
+     * @param array $paths the paths (keys) and the corresponding permission octal strings (values)
+     */
+    public static function setPermission(array $paths)
+    {
+        foreach ($paths as $path => $permission) {
+            echo "chmod('$path', $permission)...";
+            if (is_dir($path) || is_file($path)) {
+                chmod($path, octdec($permission));
+                echo "done.\n";
+            } else {
+                echo "file not found.\n";
+            }
+        }
+    }
+
+    protected function loadExtensions()
+    {
+        $file = $this->vendorDir . '/' . self::EXTENSION_FILE;
+        if (!is_file($file)) {
+            return [];
+        }
+        // invalidate opcache of extensions.php if exists
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($file, true);
+        }
+        $extensions = require($file);
+
+        $vendorDir = str_replace('\\', '/', $this->vendorDir);
+        $n = strlen($vendorDir);
+
+        foreach ($extensions as &$extension) {
+            if (isset($extension['alias'])) {
+                foreach ($extension['alias'] as $alias => $path) {
+                    $path = str_replace('\\', '/', $path);
+                    if (strpos($path . '/', $vendorDir . '/') === 0) {
+                        $extension['alias'][$alias] = '<vendor-dir>' . substr($path, $n);
+                    }
+                }
+            }
+        }
+
+        return $extensions;
+    }
+
     protected function saveExtensions(array $extensions)
     {
         $file = $this->vendorDir . '/' . self::EXTENSION_FILE;
@@ -131,34 +181,10 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
             mkdir(dirname($file), 0777, true);
         }
         $array = str_replace("'<vendor-dir>", '$vendorDir . \'', var_export($extensions, true));
-        file_put_contents($file, "<?php\n\n\dee\composer\Bootstrap::run(\$this);\n\$vendorDir = dirname(__DIR__);\n\nreturn $array;\n");
+        file_put_contents($file, "<?php\n\n\$vendorDir = dirname(__DIR__);\n\nreturn $array;\n");
         // invalidate opcache of extensions.php if exists
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($file, true);
-        }
-    }
-
-    protected function generateSymlink(PackageInterface $package)
-    {
-        $extra = $package->getExtra();
-        if (isset($extra[self::EXTRA_SYMLINK])) {
-            $fs = new Filesystem;
-            $baseDir = $this->baseDir;
-            foreach ($extra[self::EXTRA_SYMLINK] as $dest => $src) {
-                echo "symlink('$src', '$dest')...";
-                if (!$fs->isAbsolutePath($dest)) {
-                    $dest = $baseDir . '/' . $dest;
-                }
-                if (!$fs->isAbsolutePath($src)) {
-                    $src = $baseDir . '/' . $src;
-                }
-                if (!is_dir($dest) && !is_file($dest)) {
-                    symlink($src, $dest);
-                    echo "done.\n";
-                } else {
-                    echo "file destination exists.\n";
-                }
-            }
         }
     }
 
@@ -172,7 +198,41 @@ class Installer extends \yii\composer\Installer implements EventSubscriberInterf
 
     public function apply(CommandEvent $event)
     {
-        $package = $event->getComposer()->getPackage();
-        $this->setRootPackage($package, $event);
+        $composer = $event->getComposer();
+        $fs = new Filesystem;
+
+        $this->baseDir = $fs->normalizePath(realpath(getcwd()));
+        $this->vendorDir = rtrim($composer->getConfig()->get('vendor-dir'), '/');
+
+        $rootPackage = $composer->getPackage();
+        $this->setRootPackage($rootPackage, $event);
+
+        if ($event->getName() === ScriptEvents::POST_INSTALL_CMD) {
+            $extra = $rootPackage->getExtra();
+            if (isset($extra[self::EXTRA_PERMISSION])) {
+                static::setPermission($extra[self::EXTRA_PERMISSION]);
+            }
+            if (isset($extra[self::EXTRA_SYMLINK])) {
+                static::generateSymlink($extra[self::EXTRA_SYMLINK]);
+            }
+        }
+
+        $extensions = $this->loadExtensions();
+        $packages = $composer->getRepositoryManager()->getLocalRepository()->findPackages('deesoft/yii2-composer');
+        if (!empty($packages)) {
+            /* @var $package PackageInterface */
+            $package = reset($packages);
+            $extensions[$package->getName()] = [
+                'name' => $package->getName(),
+                'version' => $package->getVersion(),
+                'alias' => [
+                    '@dee/composer' => '<vendor-dir>/deesoft/yii2-composer'
+                ],
+                'bootstrap' => 'dee\\composer\\Bootstrap',
+            ];
+        } else {
+            unset($extensions['deesoft/yii2-composer']);
+        }
+        $this->saveExtensions($extensions);
     }
 }

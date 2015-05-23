@@ -12,7 +12,7 @@
     ],
     "require": {
         "composer-plugin-api": "1.0.0",
-        "yiisoft/yii2": "~2.0.0"
+        "yiisoft/yii2-composer": "~2.0.0"
     },
     "autoload": {
         "psr-4": {
@@ -21,6 +21,7 @@
     },
     "extra": {
         "class": "dee\\composer\\Plugin",
+        "bootstrap":"dee\\composer\\Bootstrap",
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
