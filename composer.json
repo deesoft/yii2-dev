@@ -72,7 +72,8 @@
     },
     "extra": {
         "bootstrap": [
-            "dee\\angular\\Bootstrap"
+            "dee\\angular\\Bootstrap",
+            "dee\\console\\Bootstrap"
         ],
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
