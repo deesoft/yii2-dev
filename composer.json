@@ -66,7 +66,8 @@
             "dee\\rest\\base\\": "libraries/rest-base",
             "dee\\angular\\": "libraries/angular",
             "dee\\adminlte\\": "libraries/adminlte",
-            "biz\\api\\": "libraries/biz-api"
+            "biz\\api\\": "libraries/biz-api",
+            "biz\\client\\": "libraries/biz-client"
         }
     },
     "extra": {
