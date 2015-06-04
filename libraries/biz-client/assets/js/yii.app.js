@@ -35,8 +35,8 @@ yii.app = (function ($) {
         
     var AppStorage = new DStorage('app-storage');
     var pub = {
-        apiPrefix: '/dee-app/api/',
-        baseUrl: '/dee-app/',
+        apiPrefix: undefined,
+        baseUrl: undefined,
         authDuration: 3600,
         renewAuth: true,
         master: function (name) {
@@ -76,6 +76,11 @@ yii.app = (function ($) {
             var RE = new RegExp('^(?:[a-z]+:/)?/', 'i');
             return RE.test(path);
         },
+        initProperties:function (props){
+            $.each(props,function(key,val){
+                pub[key] = val;
+            });
+        }
     };
     return pub;
 })(jQuery);

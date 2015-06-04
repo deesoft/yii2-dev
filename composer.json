@@ -24,6 +24,7 @@
         "deesoft/yii2-rest-base": "self.version",
         "deesoft/yii2-base": "self.version",
         "deesoft/yii2-easyui": "self.version",
+        "deesoft/yii2-adminlte": "self.version",
         "deesoft/biz3-api": "self.version",
         "deesoft/biz3-client": "self.version"
     },

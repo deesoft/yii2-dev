@@ -2,10 +2,19 @@
 
 use dee\angular\Angular;
 use biz\client\ModuleAsset;
+use yii\helpers\Url;
+use yii\helpers\Json;
 
 /* @var $this yii\web\View */
 
 ModuleAsset::register($this);
+
+$options = Json::htmlEncode([
+    'baseUrl'=>Yii::$app->homeUrl,
+    'apiPrefix'=>Url::to(['/api']).'/',
+]);
+
+$this->registerJs("yii.app.initProperties({$options});", yii\web\View::POS_END);
 ?>
 <?=
 Angular::widget([
