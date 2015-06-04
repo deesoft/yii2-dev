@@ -1,12 +1,12 @@
 {
-    "name": "deesoft/biz-client",
-    "description": "Yii2 angular extension",
-    "keywords": ["yii2", "angularjs"],
+    "name": "deesoft/biz3-client",
+    "description": "Sangkilbiz3 client",
+    "keywords": ["sangkilbiz3", "yii2", "angularjs"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/deesoft/yii2-angular/issues",
-        "source": "https://github.com/deesoft/yii2-angular"
+        "issues": "https://github.com/deesoft/biz3-client/issues",
+        "source": "https://github.com/deesoft/biz3-client"
     },
     "authors": [
         {
