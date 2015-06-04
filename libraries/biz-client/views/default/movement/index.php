@@ -12,7 +12,7 @@ $angular->requires(['dee.angular']);
 <div class="movement-index">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Create', '#/create', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create', '#/movementcreate', ['class' => 'btn btn-success']) ?>
     </p>
     <div class="grid-view">
         <table class="table table-striped table-bordered">
@@ -38,8 +38,8 @@ $angular->requires(['dee.angular']);
                     <td>{{model.date}}</td>
                     <td>{{model.nmStatus}}</td>
                     <td>
-                        <a ng-href="#/view/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                        <a ng-href="#/update/{{model.id}}" ng-if="model.status==10"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a ng-href="#/movementview/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        <a ng-href="#/movementupdate/{{model.id}}" ng-if="model.status==10"><span class="glyphicon glyphicon-pencil"></span></a>
                         <a href="javascript:;" ng-click="deleteModel(model)" ng-if="model.status==10"><span class="glyphicon glyphicon-trash"></span></a>
                     </td>
                 </tr>

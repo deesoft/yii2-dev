@@ -30,8 +30,10 @@ $angular->renderJs('js/form.js');
                         <div class="help-block">{{errors.supplier_id}}</div>
                     </div>
                     <div class="form-group required" ng-class="{error:errors.branch_id}">
-                        <label for="purchase-branch_id" class="control-label">Branch ID</label>
-                        <input id="purchase-branch_id" name="branch_id" class="form-control" ng-model="model.branch_id">
+                        <label for="purchase-branch_id" class="control-label">Branch</label>
+                        <select id="purchase-branch_id" name="branch_id" class="form-control" ng-model="model.branch_id"
+                               ng-options="branch.id as branch.name for branch in branchs.asArray()">
+                        </select>
                         <div class="help-block">{{errors.branch_id}}</div>
                     </div>
                 </div>

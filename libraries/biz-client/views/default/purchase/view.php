@@ -14,17 +14,17 @@ $angular->renderJs('js/view.js');
 
     <div class="box box-primary">
         <div class="btn-group">
-            <a ng-href="#/" class="btn btn-success btn-sm">Index</a>
+            <a ng-href="#/purchase/" class="btn btn-success btn-sm">Index</a>
         </div>
         <div class="btn-group" ng-if="model.status == 10">
-            <a ng-href="#/update/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
+            <a ng-href="#/purchase/update/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
             <a href="javascript:;" ng-click="deleteModel()"class="btn btn-danger btn-sm">Delete</a>
         </div>
         <div class="btn-group">
             <a class="btn btn-primary btn-sm" ng-click="confirm()" ng-if="model.status == 10">Confirm</a>
             <a class="btn btn-danger btn-sm" ng-click="reject()" ng-if="model.status == 20">Reject</a>
             <a class="btn btn-success btn-sm" 
-               ng-href="<?= yii\helpers\Url::to(['movement/index','#'=>'/create/purchase/{{paramId}}'])?>"
+               ng-href="#/movement/create/purchase/{{paramId}}"
                ng-if="model.status == 20">Create GR</a>
         </div>
         <div class="box box-body">

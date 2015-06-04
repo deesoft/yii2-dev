@@ -19,7 +19,7 @@ Purchase.items({
 $scope.save = function () {
     Purchase.update({id: $scope.paramId}, $scope.model, function (model) {
         id = model.id;
-        $location.path('/view/' + id);
+        $location.path('/purchase/view/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {
@@ -31,5 +31,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function (){
-    $location.path('/view/' + $scope.paramId);
+    $location.path('/purchase/view/' + $scope.paramId);
 }

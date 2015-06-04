@@ -12,6 +12,7 @@ $scope.save = function () {
         post.supplier_id = $scope.model.supplier.id;
     }
     post.date = $scope.model.date;
+    post.branch_id = $scope.model.branch_id;
     post.items = [];
     
     angular.forEach($scope.items,function (item){
@@ -22,7 +23,7 @@ $scope.save = function () {
 
     Purchase.save({}, post, function (model) {
         id = model.id;
-        $location.path('/view/' + id);
+        $location.path('/purchase/view/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {
@@ -34,5 +35,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function (){
-    $location.path('/index');
+    $location.path('/purchase');
 }

@@ -6,14 +6,13 @@ use biz\client\ModuleAsset;
 /* @var $this yii\web\View */
 
 ModuleAsset::register($this);
-
 ?>
 <?=
 Angular::widget([
     'requires' => ['app.angular', 'ui.bootstrap',],
     'routes' => [
-        '/'=>[
-            'view'=>'index'
+        '/site' => [
+            'view' => 'site/index'
         ],
         '/purchase' => [
             'view' => 'purchase/index',
@@ -43,11 +42,13 @@ Angular::widget([
             'view' => 'movement/update',
             'di' => ['Movement',],
         ],
-        '/movement/create' => [
+        '/movement/create/:reff/:id' => [
             'view' => 'movement/create',
             'di' => ['Movement',],
         ],
     ],
-    'jsFile' => 'main.js'
+    'defaultPath' => '/site',
+    'jsFile' => 'main.js',
+    'useNgApp' => false,
 ]);
 ?>

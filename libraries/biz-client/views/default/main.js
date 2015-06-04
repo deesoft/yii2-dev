@@ -57,12 +57,13 @@ dApp.config(['$httpProvider', function ($httpProvider) {
     }
 ]);
 
-dApp.factory('authInterceptor', ['$q', '$window', '$location', function ($q, $window, $location) {
+dApp.factory('authInterceptor', ['$q', '$location', function ($q, $location) {
         return {
             request: function (config) {
-                if ($window.sessionStorage.access_token) {
+                var token = yii.app.getToken();
+                if (token) {
                     //HttpBearerAuth
-                    config.headers.Authorization = 'Bearer ' + $window.sessionStorage.access_token;
+                    config.headers.Authorization = 'Bearer ' + token;
                 }
                 return config;
             },
@@ -87,3 +88,16 @@ dApp.factory('Movement', ['Rest', function (Rest) {
         });
     }]);
 
+dApp.factory('MovementHelper', function () {
+    var avaliableField = {
+        purchase: ['qty', 'total_receive'],
+    };
+    return {
+        getQtyAvaliable: function (type, row) {
+            fs = avaliableField[type];
+            if (fs) {
+                return row[fs[0]] - row[fs[1]];
+            }
+        }
+    };
+});

@@ -19,7 +19,7 @@ Movement.query({
 $scope.deleteModel = function(){
     if(confirm('Are you sure you want to delete')){
         Movement.remove({id:$scope.paramId},{},function(){
-            $location.path('/');
+            $location.path('/movement/');
         });
     }
 }

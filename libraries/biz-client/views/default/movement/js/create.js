@@ -2,7 +2,7 @@
 var $location = $injector.get('$location');
 var $routeParams = $injector.get('$routeParams');
 var Rest = $injector.get('Rest');
-var myFunc = $injector.get('myFunc');
+var myFunc = $injector.get('MovementHelper');
 
 // model
 $scope.model = {};
@@ -13,7 +13,7 @@ if ($routeParams.reff && $routeParams.id) {
         expand: 'product,uom'
     }, function (rows) {
         for (var i in rows) {
-            rows[i].avaliable = myFunc.getAvaliable($routeParams.reff, rows[i]);
+            rows[i].avaliable = myFunc.getQtyAvaliable($routeParams.reff, rows[i]);
         }
         $scope.items = rows;
         $scope.freeInputDetail = false;
@@ -34,7 +34,7 @@ $scope.save = function () {
 
     Movement.save({}, post, function (model) {
         id = model.id;
-        $location.path('/view/' + id);
+        $location.path('/movement/view/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {
@@ -46,5 +46,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function () {
-    $location.path('/index');
+    $location.path('/movement/index');
 }
