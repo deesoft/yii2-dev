@@ -3,6 +3,7 @@
 namespace biz\client;
 
 use Yii;
+use yii\helpers\Url;
 use yii\base\BootstrapInterface;
 
 /**
@@ -17,6 +18,25 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * @inheritdoc
      */
     public $layout = 'main';
+
+    /**
+     * @var type 
+     */
+    public $clientOptions = [];
+    
+    /**
+     * @var type
+     */
+    public $masterUrl;
+
+    public function init()
+    {
+        parent::init();
+        $this->clientOptions = array_merge([
+            'baseUrl' => Yii::$app->homeUrl,
+            'apiPrefix' => Url::to(['/api']) . '/',
+            ], $this->clientOptions);
+    }
 
     /**
      * @inheritdoc

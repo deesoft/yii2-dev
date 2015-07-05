@@ -21,7 +21,6 @@
     },
     "extra": {
         "class": "dee\\composer\\Plugin",
-        "bootstrap":"dee\\composer\\Bootstrap",
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }

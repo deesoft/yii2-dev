@@ -2,18 +2,18 @@
 
 use dee\angular\Angular;
 use biz\client\ModuleAsset;
-use yii\helpers\Url;
 use yii\helpers\Json;
 
 /* @var $this yii\web\View */
+/* @var $module biz\client\Module */
+$module = Yii::$app->controller->module;
+
+if ($module->masterUrl !== null) {
+    Yii::$app->getAssetManager()->assetMap[Yii::getAlias('@biz/client/assets/js/master.app.js', false)] = $module->masterUrl;
+}
+$options = Json::htmlEncode($module->clientOptions);
 
 ModuleAsset::register($this);
-
-$options = Json::htmlEncode([
-    'baseUrl'=>Yii::$app->homeUrl,
-    'apiPrefix'=>Url::to(['/api']).'/',
-]);
-
 $this->registerJs("yii.app.initProperties({$options});", yii\web\View::POS_END);
 ?>
 <?=
@@ -39,6 +39,22 @@ Angular::widget([
             'view' => 'purchase/create',
             'di' => ['Purchase',],
         ],
+        '/sales' => [
+            'view' => 'sales/index',
+            'di' => ['Sales',],
+        ],
+        '/sales/view/:id' => [
+            'view' => 'sales/view',
+            'di' => ['Sales',],
+        ],
+        '/sales/update/:id' => [
+            'view' => 'sales/update',
+            'di' => ['Sales',],
+        ],
+        '/sales/create' => [
+            'view' => 'sales/create',
+            'di' => ['Sales',],
+        ],
         '/movement' => [
             'view' => 'movement/index',
             'di' => ['Movement',],
@@ -49,6 +65,10 @@ Angular::widget([
         ],
         '/movement/update/:id' => [
             'view' => 'movement/update',
+            'di' => ['Movement',],
+        ],
+        '/movement/create' => [
+            'view' => 'movement/create',
             'di' => ['Movement',],
         ],
         '/movement/create/:reff/:id' => [
