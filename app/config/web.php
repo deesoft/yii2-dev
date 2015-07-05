@@ -1,5 +1,4 @@
 <?php
-
 $params = array_merge(
     require(__DIR__ . '/params.php'), require(__DIR__ . '/params-local.php')
 );
@@ -10,8 +9,15 @@ return [
     'controllerNamespace' => 'app\controllers',
     'bootstrap' => [
         'log',
+        'api',
     ],
     'modules' => [
+        'api' => [
+            'class' => 'biz\api\Module',
+        ],
+        'client' => [
+            'class' => 'biz\client\Module',
+        ],
     ],
     'components' => [
         'user' => [
@@ -29,6 +35,18 @@ return [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'request' => [
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                'page/<view:\w+>'=>'site/page',
+            ],
         ],
     ],
     'params' => $params,

@@ -15,8 +15,18 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $baseUrl = '@web/css';
+    public $sourcePath = '@bower/adminlte/dist';
     public $css = [
-        'main.css',
+        'css/AdminLTE.css',
+        'css/skins/_all-skins.min.css'
     ];
+    public $js = [
+        'js/app.js',
+    ];
+    public $depends = [
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapPluginAsset',
+        'rmrevin\yii\fontawesome\AssetBundle',
+    ];
+
 }
