@@ -7,12 +7,12 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 /* @var $this yii\web\View */
-/* @var $generator mdm\gii\generators\mvc\Generator */
+/* @var $generator dee\gii\generators\mvc\Generator */
 
 echo "<?php\n";
 ?>
 
-namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
+namespace <?= StringHelper::dirname(ltrim($generator->getControllerClass(), '\\')) ?>;
 
 use Yii;
 <?php if(!empty($generator->modelClass)):?>
@@ -21,9 +21,9 @@ use <?= $generator->modelClass ?>;
 
 
 /**
-* <?= StringHelper::basename(ltrim($generator->controllerClass, '\\')) ?> .
+* <?= StringHelper::basename(ltrim($generator->getControllerClass(), '\\')) ?> .
  */
-class <?= StringHelper::basename(ltrim($generator->controllerClass, '\\')) ?> extends <?= '\\' . trim($generator->baseControllerClass, '\\') . "\n" ?>
+ class <?= StringHelper::basename(ltrim($generator->getControllerClass(), '\\')) ?> extends <?= '\\' . trim($generator->baseControllerClass, '\\') . "\n" ?>
 {
 <?php foreach ($generator->getActionIDs() as $action): ?>
 <?php if($generator->isFormAction($action)):?>
