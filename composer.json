@@ -1,0 +1,29 @@
+{
+    "name": "deesoft/yii2-composer",
+    "description": "The composer plugin for Yii extension installer",
+    "keywords": ["yii2", "composer", "extension installer"],
+    "type": "composer-plugin",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Misbahul Munir",
+            "email": "misbahuldmunir@gmail.com"
+        }
+    ],
+    "require": {
+        "composer-plugin-api": "^1.0",
+        "yiisoft/yii2-composer": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "dee\\composer\\": ""
+        }
+    },
+    "extra": {
+        "class": "dee\\composer\\Plugin",
+        "bootstrap":"dee\\composer\\Bootstrap",
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
