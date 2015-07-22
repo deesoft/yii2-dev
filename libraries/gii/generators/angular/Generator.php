@@ -22,7 +22,7 @@ use yii\db\BaseActiveRecord;
  */
 class Generator extends \dee\gii\generators\crud\Generator
 {
-    public $alsoAsRest = true;
+    public $restControllerID;
 
     /**
      * @inheritdoc
@@ -47,7 +47,8 @@ class Generator extends \dee\gii\generators\crud\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['alsoAsRest'], 'boolean'],
+            [['restControllerID'], 'trim'],
+            [['restControllerID'], 'match', 'pattern' => '/^[a-z][a-z0-9\\-\\/]*$/', 'message' => 'Only a-z, 0-9, dashes (-) and slashes (/) are allowed.'],
         ]);
     }
 
@@ -57,7 +58,7 @@ class Generator extends \dee\gii\generators\crud\Generator
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'controllerID' => 'Controller ID',
+            'restControllerID' => 'Rest Controller ID',
         ]);
     }
 
@@ -67,7 +68,12 @@ class Generator extends \dee\gii\generators\crud\Generator
     public function hints()
     {
         return array_merge(parent::hints(), [
-            'alsoAsRest' => 'When <code>true</code> then controller is also generated as REST',
+            'restControllerID' => 'Controller ID should be in lower case and may contain module ID(s) separated by slashes. For example:
+                <ul>
+                    <li><code>order</code> generates <code>OrderController.php</code></li>
+                    <li><code>order-item</code> generates <code>OrderItemController.php</code></li>
+                    <li><code>admin/user</code> generates <code>UserController.php</code> under <code>admin</code> directory.</li>
+                </ul>',
         ]);
     }
 
@@ -97,14 +103,46 @@ class Generator extends \dee\gii\generators\crud\Generator
             }
         }
 
+        if (!empty($this->restControllerID)) {
+            $restControllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->getRestControllerClass(), '\\')) . '.php');
+            $files[] = new CodeFile($restControllerFile, $this->render('restController.php'));
+        }
+
         return $files;
     }
+    private $_restControllerClass;
 
     /**
-     * @inheritdoc
+     * @return string the controller class
      */
-    public function stickyAttributes()
+    public function getRestControllerClass()
     {
-        return array_merge(parent::stickyAttributes(), ['alsoAsRest']);
+        if ($this->_restControllerClass === null) {
+            $module = Yii::$app;
+            $id = $this->restControllerID;
+            while (($pos = strpos($id, '/')) !== false) {
+                $mId = substr($id, 0, $pos);
+                if (($m = $module->getModule($mId)) !== null) {
+                    $module = $m;
+                    $id = substr($id, $pos + 1);
+                } else {
+                    break;
+                }
+            }
+
+            $pos = strrpos($id, '/');
+            if ($pos === false) {
+                $prefix = '';
+                $className = $id;
+            } else {
+                $prefix = substr($id, 0, $pos + 1);
+                $className = substr($id, $pos + 1);
+            }
+
+            $className = str_replace(' ', '', ucwords(str_replace('-', ' ', $className))) . 'Controller';
+            $className = ltrim($module->controllerNamespace . '\\' . str_replace('/', '\\', $prefix) . $className, '\\');
+            $this->_restControllerClass = $className;
+        }
+        return $this->_restControllerClass;
     }
 }

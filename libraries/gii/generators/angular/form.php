@@ -6,6 +6,5 @@
 echo $form->field($generator, 'modelClass');
 echo $form->field($generator, 'controllerID');
 echo $form->field($generator, 'baseControllerClass');
-echo $form->field($generator, 'alsoAsRest')->checkbox();
 echo $form->field($generator, 'enableI18N')->checkbox();
 echo $form->field($generator, 'messageCategory');

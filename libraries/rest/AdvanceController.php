@@ -1,6 +1,6 @@
 <?php
 
-namespace dee\rest\base;
+namespace dee\rest;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -9,22 +9,37 @@ use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 
 /**
- * Description of ActiveResourceTrait
+ * Description of AdvanceController
  *
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
-trait AdvanceControllerTrait
+class AdvanceController extends Controller
 {
 
     use GlobalTriggerTrait,
         TransactionTrait;
 
     /**
+     * @inheritdoc
+     */
+    protected function verbs()
+    {
+        return [
+            'index' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT'],
+            'patch' => ['PATCH'],
+            'delete' => ['DELETE'],
+        ];
+    }
+
+    /**
      * Lists all models.
      * @return mixed
      */
-    public function query()
+    public function actionIndex()
     {
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
@@ -42,7 +57,7 @@ trait AdvanceControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function view($id)
+    public function actionView($id)
     {
         $model = $this->findModel($id);
         $this->fire('view', [$model]);
@@ -50,14 +65,14 @@ trait AdvanceControllerTrait
     }
 
     /**
-     * Displays a single model.
+     * Displays a single filed of model.
      * @param integer $id
      * @return mixed
      */
-    public function viewDetail($id, $field)
+    protected function viewDetail($id, $field)
     {
         $model = $this->findModel($id);
-        $this->fire('viewDetail', [$model]);
+        $this->fire('viewDetail', [$model, $field]);
         $definition = array_merge($model->fields(), $model->extraFields());
         if (isset($definition[$field])) {
             return is_string($definition[$field]) ? $model->{$definition[$field]} : call_user_func($definition[$field], $model, $field);
@@ -72,7 +87,7 @@ trait AdvanceControllerTrait
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function create()
+    public function actionCreate()
     {
         /* @var $model ActiveRecord */
         $model = $this->createModel();
@@ -104,7 +119,7 @@ trait AdvanceControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function update($id)
+    public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
@@ -136,7 +151,7 @@ trait AdvanceControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function patch($id)
+    public function actionPatch($id)
     {
         $model = $this->findModel($id);
 
@@ -149,7 +164,7 @@ trait AdvanceControllerTrait
             }
             $dirty = $model->getDirtyAttributes();
             $olds = $model->getOldAttributes();
-            
+
             $this->fire('patch', [$model, $dirty, $olds]);
             if ($model->save()) {
                 $this->fire('patched', [$model, $dirty, $olds]);
@@ -174,7 +189,7 @@ trait AdvanceControllerTrait
      * @param integer $id
      * @return mixed
      */
-    public function delete($id)
+    public function actionDelete($id)
     {
         $model = $this->findModel($id);
         $this->beginTransaction();

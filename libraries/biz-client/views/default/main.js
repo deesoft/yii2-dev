@@ -88,6 +88,12 @@ dApp.factory('Movement', ['Rest', function (Rest) {
         });
     }]);
 
+dApp.factory('Sales', ['Rest', function (Rest) {
+        return Rest('sales/:id', {}, {
+            items: {method: 'GET', isArray: true, url: 'sales/:id/items'}
+        });
+    }]);
+
 dApp.factory('MovementHelper', function () {
     var avaliableField = {
         purchase: ['qty', 'total_receive'],

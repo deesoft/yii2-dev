@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $generator dee\gii\generators\angular\Generator */
 
 $restName = StringHelper::basename($generator->modelClass);
-$resourceUrl = '/' . $generator->controllerID . '/resource';
+$resourceUrl = '/' . (empty($generator->restControllerID) ? $restName : $generator->restControllerID);
 
 echo "<?php\n";
 ?>

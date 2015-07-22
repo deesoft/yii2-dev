@@ -1,11 +1,14 @@
 <?php
 
-namespace dee\rest\base;
+namespace dee\rest;
 
 use Yii;
 use yii\db\ActiveRecord;
 use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
+use yii\filters\ContentNegotiator;
+use yii\web\Response;
+use yii\filters\VerbFilter;
 
 /**
  * Controller
@@ -26,9 +29,9 @@ class Controller extends \yii\web\Controller
     public $enableCsrfValidation = false;
 
     /**
-     * @var array
+     * @var string|array the configuration for creating the serializer that formats the response data.
      */
-    public $extraPatterns = [];
+    public $serializer = 'dee\rest\Serializer';
 
     /**
      * @inheritdoc
@@ -44,14 +47,52 @@ class Controller extends \yii\web\Controller
     /**
      * @inheritdoc
      */
-    public function actions()
+    public function behaviors()
     {
-        return[
-            'index' => [
-                'class' => 'dee\rest\RestAction',
-                'extraPatterns' => $this->extraPatterns,
-            ]
+        return [
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::className(),
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                ],
+            ],
+            'verbFilter' => [
+                'class' => VerbFilter::className(),
+                'actions' => $this->verbs(),
+            ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterAction($action, $result)
+    {
+        $result = parent::afterAction($action, $result);
+        return $this->serializeData($result);
+    }
+
+    /**
+     * Declares the allowed HTTP verbs.
+     * Please refer to [[VerbFilter::actions]] on how to declare the allowed verbs.
+     * @return array the allowed HTTP verbs.
+     */
+    protected function verbs()
+    {
+        return [];
+    }
+
+    /**
+     * Serializes the specified data.
+     * The default implementation will create a serializer based on the configuration given by [[serializer]].
+     * It then uses the serializer to serialize the given data.
+     * @param mixed $data the data to be serialized
+     * @return mixed the serialized data.
+     */
+    protected function serializeData($data)
+    {
+        return Yii::createObject($this->serializer)->serialize($data);
     }
 
     /**
