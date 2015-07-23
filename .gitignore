@@ -35,5 +35,6 @@ phpunit.phar
 /libraries/easyui/assets/demo/
 /push.sh
 /pull.sh
+/pull-single-app.sh
 /init
 /yii
