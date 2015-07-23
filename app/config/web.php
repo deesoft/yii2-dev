@@ -1,27 +1,17 @@
 <?php
 $params = array_merge(
-    require(__DIR__ . '/params.php'), require(__DIR__ . '/params-local.php')
+    require(__DIR__ . '/params.php'),
+    require(__DIR__ . '/params-local.php')
 );
 
 return [
-    'id' => 'app-web',
+    'id' => 'app-app',
     'basePath' => dirname(__DIR__),
+    'bootstrap' => ['log'],
     'controllerNamespace' => 'app\controllers',
-    'bootstrap' => [
-        'log',
-        'api',
-    ],
-    'modules' => [
-        'api' => [
-            'class' => 'biz\api\Module',
-        ],
-        'client' => [
-            'class' => 'biz\client\Module',
-        ],
-    ],
     'components' => [
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\ar\User',
             'enableAutoLogin' => true,
         ],
         'log' => [
@@ -36,18 +26,9 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'request' => [
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ],
-        ],
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-                'page/<view:\w+>'=>'site/page',
-            ],
-        ],
+        'authManager'=>[
+            'class'=>'yii\rbac\DbManager',
+        ]
     ],
     'params' => $params,
 ];
