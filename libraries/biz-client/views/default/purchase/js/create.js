@@ -35,5 +35,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function (){
-    $location.path('/purchase');
+    window.history.back();
 }

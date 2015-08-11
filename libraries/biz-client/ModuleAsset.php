@@ -31,5 +31,6 @@ class ModuleAsset extends \yii\web\AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'dee\angular\AngularAsset',
+        'dee\angular\AngularResourceAsset'
     ];
 }

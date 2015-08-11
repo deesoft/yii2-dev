@@ -38,8 +38,8 @@ $angular->requires(['dee.angular']);
                     <td>{{model.date}}</td>
                     <td>{{model.nmStatus}}</td>
                     <td>
-                        <a ng-href="#/movementview/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                        <a ng-href="#/movementupdate/{{model.id}}" ng-if="model.status==10"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a ng-href="#/movement/view/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        <a ng-href="#/movement/update/{{model.id}}" ng-if="model.status==10"><span class="glyphicon glyphicon-pencil"></span></a>
                         <a href="javascript:;" ng-click="deleteModel(model)" ng-if="model.status==10"><span class="glyphicon glyphicon-trash"></span></a>
                     </td>
                 </tr>

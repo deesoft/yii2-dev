@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use dee\adminlte\AdminlteAsset;
-use yii\widgets\Breadcrumbs;
 use biz\client\ModuleAsset;
 
 /* @var $this \yii\web\View */

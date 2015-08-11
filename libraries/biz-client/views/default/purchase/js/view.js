@@ -20,7 +20,7 @@ Purchase.items({
 $scope.deleteModel = function(){
     if(confirm('Are you sure you want to delete')){
         Purchase.remove({id:$scope.paramId},{},function(){
-            $location.path('/purchase/');
+            window.history.back();
         });
     }
 }

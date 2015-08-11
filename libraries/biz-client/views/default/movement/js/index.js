@@ -6,7 +6,7 @@ $scope.provider = {
         Movement.query({
             page: $scope.provider.currentPage,
             sort: $scope.provider.sort,
-            expand:'supplier,branch',
+            expand:'warehouse,branch',
         }, function (rows, headerCallback) {
             yii.angular.getPagerInfo($scope.provider, headerCallback);
             $scope.rows = rows;

@@ -31,5 +31,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function (){
-    $location.path('/purchase/view/' + $scope.paramId);
+    window.history.back();
 }

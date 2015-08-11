@@ -13,23 +13,33 @@ $pks = $class::primaryKey();
 
 $restName = StringHelper::basename($generator->modelClass);
 ?>
+var $location = $injector.get('$location');
+var search = $location.search();
 
 // data provider
 $scope.provider = {
-    multisort: false,
-    query: function(){
-        <?= $restName;?>.query({
-            page: $scope.provider.currentPage,
-            sort: $scope.provider.sort,
-        }, function (rows, headerCallback) {
-            yii.angular.getPagerInfo($scope.provider, headerCallback);
-            $scope.rows = rows;
-        });
+    sort: search.sort,
+    paging: function () {
+        search.page = $scope.provider.page;
+        $location.search(search);
+    },
+    sorting:function(){
+        search.sort = $scope.provider.sort;
+        $location.search(search);
     }
 };
 
 // initial load
-$scope.provider.query();
+query = function(){
+    <?= $restName;?>.query({
+        page: search.page,
+        sort: search.sort,
+    }, function (rows, headerCallback) {
+        yii.angular.getPagerInfo($scope.provider, headerCallback);
+        $scope.rows = rows;
+    });
+}
+query();
 
 // delete Item
 $scope.deleteModel = function(model){
@@ -40,7 +50,7 @@ $scope.deleteModel = function(model){
     echo "        id = model.{$pks[0]};\n";
 }?>
         <?= $restName;?>.remove({id:id},{},function(){
-            $scope.provider.query();
+            query();
         });
     }
 }

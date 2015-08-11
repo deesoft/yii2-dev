@@ -1,6 +1,7 @@
 // master
 $scope.products = yii.app.master('products');
-$scope.suppliers = yii.app.master('suppliers');
+$scope.branchs = yii.app.master('branchs');
+$scope.warehouses = yii.app.master('warehouses');
 $scope.productUoms = yii.app.master('product_uoms');
 $scope.errors = {data: {}};
 

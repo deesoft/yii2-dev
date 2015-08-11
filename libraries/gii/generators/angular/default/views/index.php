@@ -31,7 +31,7 @@ $angular->requires(['dee.angular']);
     <div class="grid-view">
         <table class="table table-striped table-bordered">
             <thead>
-                <tr>
+                <tr d-sort ng-model="provider.sort" ng-change="provider.sorting()" multisort="false">
                     <th>#</th>
 <?php 
 $count = 0;
@@ -41,7 +41,7 @@ foreach ($generator->getColumnNames() as $column){
         echo "<!--\n";
     }
     $header = Inflector::id2camel($column);
-    echo "                    <th><a href=\"javascript:;\" d-sort-provider=\"provider\" sort-field=\"$column\">{$header}</a></th>\n";
+    echo "                    <th><a href sort-field=\"$column\">{$header}</a></th>\n";
 }
 if($count >= $maxColumn){
     echo "-->\n";
@@ -52,7 +52,7 @@ if($count >= $maxColumn){
             </thead>
             <tbody>
                 <tr ng-repeat="(no,model) in rows">
-                    <td>{{(provider.currentPage-1)*provider.itemPerPage + no + 1}}</td>
+                    <td>{{(provider.page-1)*provider.itemPerPage + no + 1}}</td>
 <?php
 $count = 0;
 foreach ($generator->getColumnNames() as $column){
@@ -74,9 +74,9 @@ if($count >= $maxColumn){
                 </tr>
             </tbody>
         </table>
-        <pagination total-items="provider.totalItems" ng-model="provider.currentPage"
+        <pagination total-items="provider.totalItems" ng-model="provider.page"
                     max-size="5" items-per-page="provider.itemPerPage"
-                    ng-change="provider.query()"
+                    ng-change="provider.paging()"
                     class="pagination-sm" boundary-links="true"></pagination>
     </div>
 </div>

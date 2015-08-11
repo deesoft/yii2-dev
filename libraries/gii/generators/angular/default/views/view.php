@@ -24,7 +24,7 @@ $angular->renderJs('js/view.js');
 
     <p>
         <a ng-href="#/update/{{paramId}}" class="btn btn-primary">Update</a>
-        <a href="javascript:;" ng-click="deleteModel()"class="btn btn-danger">Delete</a>
+        <a href ng-click="deleteModel()"class="btn btn-danger">Delete</a>
     </p>
 
     <table class="table table-striped table-bordered detail-view">

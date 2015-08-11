@@ -52,6 +52,7 @@ dApp.directive('chgFokus', function () {
     };
 });
 
+
 dApp.config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('authInterceptor');
     }

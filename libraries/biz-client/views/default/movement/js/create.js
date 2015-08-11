@@ -5,15 +5,35 @@ var Rest = $injector.get('Rest');
 var myFunc = $injector.get('MovementHelper');
 
 // model
-$scope.model = {};
+var reffType = undefined, reffId = undefined;
 
 if ($routeParams.reff && $routeParams.id) {
-    Rest($routeParams.reff + '/:id/items').query({
-        id: $routeParams.id,
-        expand: 'product,uom'
+    reffType = $routeParams.reff;
+    reffId = $routeParams.id;
+    
+    Rest(reffType + '/:id').get({
+        id: reffId,
+        expand: 'branch'
+    }, function (row) {
+        var model = {};
+        if(reffType == 'receive'){
+            model.branch_id = row.branch_dest_id;
+            model.branch = row.branchDest;
+        }else{
+            model.branch_id = row.branch_id;
+            model.branch = row.branch;
+        }
+        $scope.model = model;
+    });
+    Rest(reffType + '/:id/items').query({
+        id: reffId,
+        expand: 'product,uom,avaliable'
     }, function (rows) {
         for (var i in rows) {
-            rows[i].avaliable = myFunc.getQtyAvaliable($routeParams.reff, rows[i]);
+            if(reffType == 'receive'){
+                
+            }
+            rows[i].qty = rows[i].avaliable;
         }
         $scope.items = rows;
         $scope.freeInputDetail = false;
@@ -21,15 +41,16 @@ if ($routeParams.reff && $routeParams.id) {
 } else {
     $scope.freeInputDetail = true;
     $scope.items = [];
+    $scope.model = {};
 }
+$scope.useReff = reffType != undefined;
 
 // save Item
 $scope.save = function () {
     var post = {};
-    if ($scope.model.supplier) {
-        post.supplier_id = $scope.model.supplier.id;
-    }
     post.date = $scope.model.date;
+    post.warehouse_id = $scope.model.warehouse_id;
+    
     post.items = $scope.items;
 
     Movement.save({}, post, function (model) {
@@ -46,5 +67,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function () {
-    $location.path('/movement/index');
+    window.history.back();
 }

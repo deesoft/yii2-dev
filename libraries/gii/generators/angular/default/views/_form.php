@@ -24,7 +24,7 @@ $angular->renderJs('js/form.js');
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-form">
-    <form name="Form" d-errors="errors">
+    <form name="Form" >
         <div ng-if="errors.status">
             <h1>Error {{errors.status}}: {{errors.text}}</h1>
             <ul>
@@ -50,6 +50,7 @@ FIELD;
 } ?>
         <div class="form-group">
             <button class="btn btn-primary" ng-click="save()">Save</button>
+            <button class="btn btn-danger" ng-click="discard()">Save</button>
         </div>
     </form>
 </div>

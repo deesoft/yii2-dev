@@ -44,7 +44,11 @@
         "deesoft/yii2-base": "~1.0",
         "deesoft/yii2-adminlte": "~1.0",
         "bower-asset/AdminLTE": "~2.0",
-        "rmrevin/yii2-fontawesome": "~2.0"
+        "rmrevin/yii2-fontawesome": "~2.0",
+        "bower-asset/angular": "~1.3.0",
+        "bower-asset/angular-route": "~1.3.0",
+        "bower-asset/angular-resource": "~1.3.0",
+        "bower-asset/angular-bootstrap": "~0.13.1"
     },
     "require-dev": {
         "deesoft/yii2-gii": "~1.0",

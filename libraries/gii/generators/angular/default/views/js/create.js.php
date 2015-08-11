@@ -17,7 +17,7 @@ $restName = StringHelper::basename($generator->modelClass);
 $location = $injector.get('$location');
 // model
 $scope.model = {};
-$scope.errors = {data:{}};
+
 
 // save Item
 $scope.save = function(){
@@ -36,4 +36,8 @@ $scope.save = function(){
             }
         }
     });
+}
+
+$scope.discard = function(){
+    window.history.back();
 }

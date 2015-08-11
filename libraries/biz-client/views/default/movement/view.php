@@ -17,7 +17,7 @@ $angular->renderJs('js/view.js');
             <a ng-href="#/movement" class="btn btn-success btn-sm">Index</a>
         </div>
         <div class="btn-group" ng-if="model.status == 10">
-            <a ng-href="#/movementupdate/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
+            <a ng-href="#/movement/update/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
             <a href="javascript:;" ng-click="deleteModel()"class="btn btn-danger btn-sm">Delete</a>
         </div>
         <div class="btn-group">

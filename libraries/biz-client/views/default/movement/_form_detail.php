@@ -28,9 +28,7 @@
                         <td >{{item.product.name}}</td>
                         <td >{{item.avaliable}}</td>
                         <td ><input ng-model="item.qty" class="form-control" data-field="qty"></td>
-                        <td ><select ng-model="item.uom_id" class="form-control" data-field="uom"
-                                     ng-options="uom.id as uom.name for uom in productUoms.get(item.product_id)">
-                            </select></td>
+                        <td >{{item.uom.name}}</td>
                             
                         <td style="text-align: center;" ng-if="freeInputDetail"><a href="javascript:;" ng-click="deleteRow(idx)"><i class="glyphicon glyphicon-trash"></i></a></td>
                     </tr>

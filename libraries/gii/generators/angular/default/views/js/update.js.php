@@ -22,7 +22,6 @@ $scope.paramId = $routeParams.id;
 <?= $restName;?>.get({id:$scope.paramId},function(row){
     $scope.model = row;
 });
-$scope.errors = {};
 
 // save Item
 $scope.save = function(){
@@ -41,4 +40,8 @@ $scope.save = function(){
             }
         }
     });
+}
+
+$scope.discard = function(){
+    window.history.back();
 }

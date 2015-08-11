@@ -4,12 +4,12 @@ $routeParams = $injector.get('$routeParams');
 
 $scope.paramId = $routeParams.id;
 // model
-Movement.get({id: $scope.paramId, expand: 'supplier,branch'}, function (row) {
+Movement.get({id: $scope.paramId, expand: 'warehouse,branch'}, function (row) {
     $scope.model = row;
 });
 
-Movement.query({
-    id: $scope.paramId, attribute: 'items',
+Movement.items({
+    id: $scope.paramId,
     expand: 'product,uom'
 }, function (rows) {
     $scope.items = rows;
