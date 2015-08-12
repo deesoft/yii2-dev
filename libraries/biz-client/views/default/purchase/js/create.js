@@ -3,7 +3,7 @@ $location = $injector.get('$location');
 
 // model
 $scope.model = {};
-$scope.items = [];
+$scope.model.items = [];
 
 // save Item
 $scope.save = function () {
@@ -15,10 +15,13 @@ $scope.save = function () {
     post.branch_id = $scope.model.branch_id;
     post.items = [];
     
-    angular.forEach($scope.items,function (item){
-        var r = angular.copy(item);
-        delete r.product;
-        post.items.push(r);
+    angular.forEach($scope.model.items,function (item){
+        post.items.push({
+            product_id:item.product_id,
+            qty:item.qty,
+            uom_id:item.uom_id,
+            price:item.price,
+        });
     });
 
     Purchase.save({}, post, function (model) {

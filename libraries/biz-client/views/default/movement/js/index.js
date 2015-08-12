@@ -1,28 +1,38 @@
+var $location = $injector.get('$location');
+var search = $location.search();
+
+query = function () {
+    Movement.query({
+        page: search.page,
+        sort: search.sort,
+        expand: 'branch,warehouse',
+    }, function (rows, headerCallback) {
+        yii.angular.getPageInfo($scope.provider, headerCallback);
+        $scope.rows = rows;
+    });
+}
 
 // data provider
 $scope.provider = {
-    multisort: false,
-    query: function(){
-        Movement.query({
-            page: $scope.provider.currentPage,
-            sort: $scope.provider.sort,
-            expand:'warehouse,branch',
-        }, function (rows, headerCallback) {
-            yii.angular.getPagerInfo($scope.provider, headerCallback);
-            $scope.rows = rows;
-        });
+    sort: search.sort,
+    paging: function () {
+        search.page = $scope.provider.page;
+        $location.search(search);
+    },
+    sorting: function () {
+        search.sort = $scope.provider.sort;
+        $location.search(search);
     }
 };
 
-// initial load
-$scope.provider.query();
-
 // delete Item
-$scope.deleteModel = function(model){
-    if(confirm('Are you sure you want to delete')){
+$scope.deleteModel = function (model) {
+    if (confirm('Are you sure you want to delete')) {
         id = model.id;
-        Movement.remove({id:id},{},function(){
-            $scope.provider.query();
+        Movement.remove({id: id}, {}, function () {
+            query();
         });
     }
 }
+
+query();

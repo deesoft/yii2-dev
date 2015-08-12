@@ -2,56 +2,85 @@
 var $location = $injector.get('$location');
 var $routeParams = $injector.get('$routeParams');
 var Rest = $injector.get('Rest');
-var myFunc = $injector.get('MovementHelper');
 
 // model
-var reffType = undefined, reffId = undefined;
-
 if ($routeParams.reff && $routeParams.id) {
-    reffType = $routeParams.reff;
-    reffId = $routeParams.id;
+    var reff_type = $routeParams.reff,
+    config = yii.app.master('mvconfig').get(reff_type),
+    reff_id = $routeParams.id;
     
-    Rest(reffType + '/:id').get({
-        id: reffId,
-        expand: 'branch'
+    Rest(config.api + '/:id').get({
+        id: reff_id,
+        expand: 'items.product,items.uom'
     }, function (row) {
         var model = {};
-        if(reffType == 'receive'){
-            model.branch_id = row.branch_dest_id;
-            model.branch = row.branchDest;
-        }else{
+
+        if (config.branch) {
+            model.branch_id = row[config.branch];
+        } else {
             model.branch_id = row.branch_id;
-            model.branch = row.branch;
         }
+        if (model.branch_id) {
+            model.branch_name = $scope.branchs.get(model.branch_id).name;
+        }
+
+        model.type = config.type;
+        model.type_name = config.type == 10 ? 'Goods Receipe' : 'Goods Issue';
+        model.reff_type = reff_type;
+        model.reff_name = config.name;
+        model.reff_number = row.number;
+        model.reff_id = reff_id;
+        if(config.client){
+            model.reff_url = config.client;
+        }else{
+            model.reff_url = config.api;
+        }
+        
+        model.items = [];
+
+        var f0 = config.field[0], f1 = config.field[1];
+        angular.forEach(row.items, function (item) {
+            item.avaliable = item[f0] - item[f1];
+            item.qty = '';
+            model.items.push(item);
+        });
+        
         $scope.model = model;
+    },function (){
+        window.alert('Not Found');
+        window.history.back();
     });
-    Rest(reffType + '/:id/items').query({
-        id: reffId,
-        expand: 'product,uom,avaliable'
-    }, function (rows) {
-        for (var i in rows) {
-            if(reffType == 'receive'){
-                
-            }
-            rows[i].qty = rows[i].avaliable;
-        }
-        $scope.items = rows;
-        $scope.freeInputDetail = false;
-    });
+    
+    $scope.allowInputDetail = false;
 } else {
-    $scope.freeInputDetail = true;
-    $scope.items = [];
-    $scope.model = {};
+    $scope.allowInputDetail = true;
+
+    $scope.model = {
+        items: []
+    };
 }
-$scope.useReff = reffType != undefined;
 
 // save Item
 $scope.save = function () {
     var post = {};
     post.date = $scope.model.date;
     post.warehouse_id = $scope.model.warehouse_id;
-    
-    post.items = $scope.items;
+    post.type = $scope.model.type;
+    if ($scope.model.reff_type) {
+        post.reff_type = $scope.model.reff_type;
+        post.reff_id = $scope.model.reff_id;
+    }
+
+    post.items = [];
+    angular.forEach($scope.model.items, function (item) {
+        if (item.qty != '' && item.qty != '0') {
+            post.items.push({
+                product_id: item.product_id,
+                qty: item.qty,
+                uom_id: item.uom_id,
+            });
+        }
+    });
 
     Movement.save({}, post, function (model) {
         id = model.id;

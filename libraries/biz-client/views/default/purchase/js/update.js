@@ -4,20 +4,33 @@ $routeParams = $injector.get('$routeParams');
 
 $scope.paramId = $routeParams.id;
 // model
-Purchase.get({id: $scope.paramId, expand: 'supplier,branch'}, function (row) {
+Purchase.get({
+    id: $scope.paramId, 
+    expand: 'supplier,branch,items.product,items.uom'
+}, function (row) {
     $scope.model = row;
-});
-
-Purchase.items({
-    id: $scope.paramId,
-    expand: 'product,uom'
-}, function (rows) {
-    $scope.items = rows;
 });
 
 // save Item
 $scope.save = function () {
-    Purchase.update({id: $scope.paramId}, $scope.model, function (model) {
+    var post = {};
+    if ($scope.model.supplier) {
+        post.supplier_id = $scope.model.supplier.id;
+    }
+    post.date = $scope.model.date;
+    post.branch_id = $scope.model.branch_id;
+    post.items = [];
+    
+    angular.forEach($scope.model.items,function (item){
+        post.items.push({
+            product_id:item.product_id,
+            qty:item.qty,
+            uom_id:item.uom_id,
+            price:item.price,
+        });
+    });
+    
+    Purchase.update({id: $scope.paramId}, post, function (model) {
         id = model.id;
         $location.path('/purchase/view/' + id);
     }, function (r) {

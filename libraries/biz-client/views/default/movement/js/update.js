@@ -1,23 +1,72 @@
 
 $location = $injector.get('$location');
 $routeParams = $injector.get('$routeParams');
+var Rest = $injector.get('Rest');
 
 $scope.paramId = $routeParams.id;
-// model
-Movement.get({id: $scope.paramId, expand: 'supplier,branch'}, function (row) {
-    $scope.model = row;
-});
 
-Movement.query({
-    id: $scope.paramId, attribute: 'items',
-    expand: 'product,uom'
-}, function (rows) {
-    $scope.items = rows;
+// model
+Movement.get({
+    id: $scope.paramId,
+    expand: 'items,reference.items.product,reference.items.uom',
+}, function (row) {
+    var model = row;
+
+    if (row.reff_type) {
+        var config = yii.app.master('mvconfig').get(row.reff_type);
+        model.type_name = row.type == 10 ? 'Goods Receipe' : 'Goods Issue';
+        model.reff_name = config.name;
+        model.reff_number = row.reference.number;
+        if (config.client) {
+            model.reff_url = config.client;
+        } else {
+            model.reff_url = config.api;
+        }
+
+        var f0 = config.field[0], f1 = config.field[1];
+        var items = [];
+        angular.forEach(row.reference.items, function (item) {
+            item.avaliable = item[f0] - item[f1];
+            item.qty = '';
+            for (var i in model.items) {
+                if (item.product_id == model.items[i].product_id) {
+                    item.qty = model.items[i].qty;
+                    break;
+                }
+            }
+            items.push(item);
+        });
+        model.items = items;
+    }
+
+    if (model.branch_id) {
+        model.branch_name = $scope.branchs.get(model.branch_id).name;
+    }
+
+    $scope.model = model;
 });
 
 // save Item
 $scope.save = function () {
-    Movement.update({id: $scope.paramId}, $scope.model, function (model) {
+    var post = {};
+    post.date = $scope.model.date;
+    post.warehouse_id = $scope.model.warehouse_id;
+    
+    if (!$scope.model.reff_type) {
+        post.type = $scope.model.type;
+    }
+
+    post.items = [];
+    angular.forEach($scope.model.items, function (item) {
+        if (item.qty != '' && item.qty != '0') {
+            post.items.push({
+                product_id: item.product_id,
+                qty: item.qty,
+                uom_id: item.uom_id,
+            });
+        }
+    });
+    Movement.update({id: $scope.paramId}, post, function (model) {
         id = model.id;
         $location.path('/movement/view/' + id);
     }, function (r) {
@@ -30,6 +79,6 @@ $scope.save = function () {
     });
 }
 
-$scope.discard = function (){
-    $location.path('/movement/view/' + $scope.paramId);
+$scope.discard = function () {
+    window.history.back();
 }

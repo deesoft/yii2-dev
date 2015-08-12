@@ -25,7 +25,7 @@ $angular->renderJs('js/view.js');
                 <a class="btn btn-primary btn-sm" ng-click="confirm()" ng-if="model.status == 10">Confirm</a>
                 <a class="btn btn-danger btn-sm" ng-click="reject()" ng-if="model.status == 20">Reject</a>
                 <a class="btn btn-success btn-sm"
-                   ng-href="#/movement/create/purchase/{{paramId}}"
+                   ng-href="#/movement/create/100/{{paramId}}"
                    ng-if="model.status == 20">Create GR</a>
             </div>
         </div>
@@ -58,7 +58,7 @@ $angular->renderJs('js/view.js');
                                     </tr>
                                 </thead>
                                 <tbody id="item-grid">
-                                    <tr ng-repeat="(idx,item) in items" data-key="{{idx}}">
+                                    <tr ng-repeat="(idx,item) in model.items" data-key="{{idx}}">
                                         <td >{{item.product.name}}</td>
                                         <td  style="text-align: right;">{{item.qty}}</td>
                                         <td >{{item.uom.name}}</td>

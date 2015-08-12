@@ -46,7 +46,7 @@ $angular->renderJs('js/view.js');
                             </tr>
                         </thead>
                         <tbody id="item-grid">
-                            <tr ng-repeat="(idx,item) in items" data-key="{{idx}}">
+                            <tr ng-repeat="(idx,item) in model.items" data-key="{{idx}}">
                                 <td >{{item.product.name}}</td>
                                 <td  style="text-align: right;">{{item.qty}}</td>
                                 <td >{{item.uom.name}}</td>

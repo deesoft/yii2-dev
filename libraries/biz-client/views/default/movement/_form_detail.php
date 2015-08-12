@@ -1,6 +1,6 @@
 <div class="box box-footer">
     <div class="row">
-        <div class="col-lg-12" ng-if="freeInputDetail">
+        <div class="col-lg-12" ng-if="allowInputDetail">
             <div class="row">
                 <div class="col-xs-10">
                     Product :
@@ -24,7 +24,7 @@
                     </tr>
                 </thead>
                 <tbody id="item-grid">
-                    <tr ng-repeat="(idx,item) in items" data-key="{{idx}}" chg-fokus="itemActive">
+                    <tr ng-repeat="(idx,item) in model.items" data-key="{{idx}}" chg-fokus="itemActive">
                         <td >{{item.product.name}}</td>
                         <td >{{item.avaliable}}</td>
                         <td ><input ng-model="item.qty" class="form-control" data-field="qty"></td>

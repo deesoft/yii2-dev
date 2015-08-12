@@ -7,7 +7,7 @@ query = function () {
         sort: search.sort,
         expand: 'supplier,branch',
     }, function (rows, headerCallback) {
-        yii.angular.getPagerInfo($scope.provider, headerCallback);
+        yii.angular.getPageInfo($scope.provider, headerCallback);
         $scope.rows = rows;
     });
 }
