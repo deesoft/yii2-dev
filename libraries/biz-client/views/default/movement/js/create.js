@@ -42,6 +42,9 @@ if ($routeParams.reff && $routeParams.id) {
         angular.forEach(row.items, function (item) {
             item.avaliable = item[f0] - item[f1];
             item.qty = '';
+            if(config.value_field){
+                item.item_value = item[config.value_field];
+            }
             model.items.push(item);
         });
         
@@ -77,6 +80,7 @@ $scope.save = function () {
             post.items.push({
                 product_id: item.product_id,
                 qty: item.qty,
+                item_value: item.item_value,
                 uom_id: item.uom_id,
             });
         }

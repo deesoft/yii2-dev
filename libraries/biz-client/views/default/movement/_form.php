@@ -54,10 +54,10 @@ $angular->renderJs('js/form.js');
                     <div class="col-xs-6">
                         <div class="form-group" ng-class="{error:errors.branch_id}">
                             <label for="movement-branch_id" class="control-label">Branch ID</label>
-                            <select ng-if="!useReff" id="movement-branch_id" name="branch_id" class="form-control" ng-model="model.branch_id"
+                            <select ng-if="!model.reff_type" id="movement-branch_id" name="branch_id" class="form-control" ng-model="model.branch_id"
                                     ng-options="branch.id as branch.name for branch in branchs.asArray()">
                             </select>
-                            <span ng-if="useReff" class="form-control" ng-bind="model.branch_name"></span>
+                            <span ng-if="model.reff_type" class="form-control" ng-bind="model.branch_name"></span>
                             <div class="help-block">{{errors.branch_id}}</div>
                         </div>
                         <div class="form-group required" ng-class="{error:errors.warehouse_id}">

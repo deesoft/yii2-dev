@@ -6,8 +6,18 @@ var $route = $injector.get('$route');
 $scope.paramId = $routeParams.id;
 // model
 Movement.get({id: $scope.paramId, 
-    expand: 'warehouse,branch,items.product,items.uom'
+    expand: 'warehouse,branch,items.product,items.uom,reference'
 }, function (row) {
+    if(row.reff_type){
+        var config = yii.app.master('mvconfig').get(row.reff_type);
+        row.reff_name = config.name;
+        row.reff_number = row.reference.number;
+        if (config.client) {
+            row.reff_url = config.client;
+        } else {
+            row.reff_url = config.api;
+        }
+    }
     $scope.model = row;
 });
 
@@ -15,7 +25,7 @@ Movement.get({id: $scope.paramId,
 $scope.deleteModel = function(){
     if(confirm('Are you sure you want to delete')){
         Movement.remove({id:$scope.paramId},{},function(){
-            $location.path('/movement/');
+            window.history.back();
         });
     }
 }
@@ -27,6 +37,8 @@ $scope.apply = function(){
             {field:'status',value:20}
         ],function(){
             $route.reload();
+        },function (err){
+            window.alert(err.data.message)
         });
     }
 }
@@ -38,6 +50,8 @@ $scope.reject = function(){
             {field:'status',value:10}
         ],function(){
             $route.reload();
+        },function (err){
+            window.alert(err.data.message)
         });
     }
 }

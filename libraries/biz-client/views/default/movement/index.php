@@ -12,7 +12,7 @@ $angular->requires(['dee.angular']);
 <div class="movement-index">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Create', '#/movementcreate', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create', '#/movement/create', ['class' => 'btn btn-success']) ?>
     </p>
     <div class="grid-view">
         <table class="table table-striped table-bordered">

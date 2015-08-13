@@ -31,8 +31,8 @@ $scope.itemActive = -1;
 $scope.addItem = function (product) {
     var has = false;
     var key = 0;
-    for (key in $scope.items) {
-        var item = $scope.items[key];
+    for (key in $scope.model.items) {
+        var item = $scope.model.items[key];
         if (item.product_id == product.id) {
             has = true;
             item.qty++;
@@ -41,13 +41,13 @@ $scope.addItem = function (product) {
         }
     }
     if (!has) {
-        key = $scope.items.length;
+        key = $scope.model.items.length;
         var uom_id;
         var uoms = $scope.productUoms.get(product.id);
         if (uoms && uoms[0]) {
             uom_id = uoms[0].id;
         }
-        $scope.items.push({
+        $scope.model.items.push({
             product_id: product.id,
             product: product,
             uom_id: uom_id,
@@ -64,11 +64,11 @@ $scope.selectProduct = function (product) {
 
 $scope.deleteRow = function (idx) {
     var temp = [];
-    for (var key in $scope.items) {
+    for (var key in $scope.model.items) {
         if (key != idx) {
-            temp.push($scope.items[key])
+            temp.push($scope.model.items[key])
         }
     }
-    $scope.items = temp;
+    $scope.model.items = temp;
     jQuery('#product').focus();
 }

@@ -28,6 +28,9 @@ Movement.get({
         angular.forEach(row.reference.items, function (item) {
             item.avaliable = item[f0] - item[f1];
             item.qty = '';
+            if(config.value_field){
+                item.item_value = item[config.value_field];
+            }
             for (var i in model.items) {
                 if (item.product_id == model.items[i].product_id) {
                     item.qty = model.items[i].qty;
@@ -62,6 +65,7 @@ $scope.save = function () {
             post.items.push({
                 product_id: item.product_id,
                 qty: item.qty,
+                item_value: item.item_value,
                 uom_id: item.uom_id,
             });
         }

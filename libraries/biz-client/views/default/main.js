@@ -31,22 +31,22 @@ dApp.directive('chgFokus', function () {
                     }, 0);
                 }
             });
-            element.on('keypress', ':input[data-field]', function (e) {
-                if (e.keyCode == 13) {
-                    var $th = $(this);
-                    var field = $th.data('field');
-                    switch (field) {
-                        case 'qty':
-                            element.find(':input[data-field="uom"]').focus();
-                            break;
-                        case 'uom':
-                            element.find(':input[data-field="price"]').focus().select();
-                            break;
-                        default :
-                            $('#product').focus();
+            var fields = angular.isDefined(attrs.fields) ? attrs.fields.split(',') : false;
+            if (fields) {
+                element.on('keypress', ':input[data-field]', function (e) {
+                    if (e.keyCode == 13) {
+                        var $th = $(this);
+                        var field = $th.data('field');
+                        for (var i = 0; i < fields.length; i++) {
+                            if (fields[i] == field && fields[i + 1] != undefined) {
+                                element.find(':input[data-field="' + fields[i + 1] + '"]').focus();
+                                return;
+                            }
+                        }
+                        $('#product').focus();
                     }
-                }
-            });
+                });
+            }
         }
     };
 });

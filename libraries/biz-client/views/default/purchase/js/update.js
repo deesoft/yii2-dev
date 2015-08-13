@@ -30,7 +30,8 @@ $scope.save = function () {
         });
     });
     
-    Purchase.update({id: $scope.paramId}, post, function (model) {
+    Purchase.update({id: $scope.paramId}, post, 
+    function (model) {
         id = model.id;
         $location.path('/purchase/view/' + id);
     }, function (r) {

@@ -29,7 +29,7 @@ Angular::widget([
         ],
         '/purchase/view/:id' => [
             'view' => 'purchase/view',
-            'di' => ['Purchase',],
+            'di' => ['Purchase','Movement'],
         ],
         '/purchase/update/:id' => [
             'view' => 'purchase/update',
