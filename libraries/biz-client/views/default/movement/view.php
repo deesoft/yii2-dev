@@ -18,7 +18,7 @@ $angular->renderJs('js/view.js');
                 <a ng-href="#/movement" class="btn btn-success btn-sm">Index</a>
             </div>
             <div class="btn-group" ng-if="model.status == 10">
-                <a ng-href="#/movement/update/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
+                <a ng-href="#/movement/{{paramId}}/edit" class="btn btn-primary btn-sm">Update</a>
                 <a href="javascript:;" ng-click="deleteModel()"class="btn btn-danger btn-sm">Delete</a>
             </div>
             <div class="btn-group">
@@ -32,7 +32,7 @@ $angular->renderJs('js/view.js');
                 <tr><th>Type</th><td>{{model.type==10?'Goods Receive':'Goods Issue'}}</td></tr>
                 <tr ng-if="model.reff_type">
                     <th>Reference</th>
-                    <td>{{model.reff_name}} <a ng-href="#{{model.reff_url}}/view/{{model.reff_id}}">{{model.reff_number}}</a></td>
+                    <td>{{model.reff_name}} <a ng-href="#{{model.reff_url}}/{{model.reff_id}}">{{model.reff_number}}</a></td>
                 </tr>
                 <tr><th>Branch</th><td>{{model.branch.name}}</td></tr>
                 <tr><th>Warehouse</th><td>{{model.warehouse.name}}</td></tr>

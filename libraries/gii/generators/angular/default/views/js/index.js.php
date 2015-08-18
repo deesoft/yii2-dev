@@ -35,7 +35,7 @@ query = function(){
         page: search.page,
         sort: search.sort,
     }, function (rows, headerCallback) {
-        yii.angular.getPagerInfo($scope.provider, headerCallback);
+        yii.angular.getPageInfo($scope.provider, headerCallback);
         $scope.rows = rows;
     });
 }

@@ -11,6 +11,8 @@ $pks = $class::primaryKey();
 $rowKey = count($pks) > 1 ? "[model.".  implode(', model.', $pks)."].join()" : "model.{$pks[0]}";
 
 $maxColumn = 6;
+$prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRoute, '/') . '/';
+
 echo "<?php\n";
 ?>
 use dee\angular\Angular;
@@ -26,7 +28,7 @@ $angular->requires(['dee.angular']);
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-index">
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
     <p>
-        <?= "<?= " ?>Html::a('Create', '#/create', ['class' => 'btn btn-success']) ?>
+        <?= "<?= " ?>Html::a('Create', '#/<?= $prefixRoute; ?>new', ['class' => 'btn btn-success']) ?>
     </p>
     <div class="grid-view">
         <table class="table table-striped table-bordered">
@@ -67,9 +69,9 @@ if($count >= $maxColumn){
 }
 ?>
                     <td>
-                        <a ng-href="#/view/{{<?= $rowKey?>}}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                        <a ng-href="#/update/{{<?= $rowKey?>}}"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="javascript:;" ng-click="deleteModel(model)"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a ng-href="#/<?= $prefixRoute; ?>{{<?= $rowKey?>}}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        <a ng-href="#/<?= $prefixRoute; ?>{{<?= $rowKey?>}}/edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href ng-click="deleteModel(model)"><span class="glyphicon glyphicon-trash"></span></a>
                     </td>
                 </tr>
             </tbody>

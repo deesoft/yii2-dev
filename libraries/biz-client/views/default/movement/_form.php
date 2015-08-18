@@ -33,7 +33,7 @@ $angular->renderJs('js/form.js');
                                 <option value="20">Goods Issue</option>
                             </select>
                             <span ng-if="model.reff_type" class="form-control">
-                                {{model.reff_name}} <a ng-href="#{{model.reff_url}}/view/{{model.reff_id}}">{{model.reff_number}}</a>
+                                {{model.reff_name}} <a ng-href="#{{model.reff_url}}/{{model.reff_id}}">{{model.reff_number}}</a>
                             </span>
                             <div class="help-block">{{errors.type}}</div>
                         </div>

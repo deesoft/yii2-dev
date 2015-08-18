@@ -4,22 +4,36 @@ $routeParams = $injector.get('$routeParams');
 
 $scope.paramId = $routeParams.id;
 // model
-Sales.get({id: $scope.paramId, expand: 'supplier,branch'}, function (row) {
+Sales.get({
+    id: $scope.paramId, 
+    expand: 'supplier,branch,items.product,items.uom'
+}, function (row) {
     $scope.model = row;
-});
-
-Sales.items({
-    id: $scope.paramId,
-    expand: 'product,uom'
-}, function (rows) {
-    $scope.items = rows;
 });
 
 // save Item
 $scope.save = function () {
-    Sales.update({id: $scope.paramId}, $scope.model, function (model) {
+    var post = {};
+    if ($scope.model.supplier) {
+        post.supplier_id = $scope.model.supplier.id;
+    }
+    post.date = $scope.model.date;
+    post.branch_id = $scope.model.branch_id;
+    post.items = [];
+    
+    angular.forEach($scope.model.items,function (item){
+        post.items.push({
+            product_id:item.product_id,
+            qty:item.qty,
+            uom_id:item.uom_id,
+            price:item.price,
+        });
+    });
+    
+    Sales.update({id: $scope.paramId}, post, 
+    function (model) {
         id = model.id;
-        $location.path('/sales/view/' + id);
+        $location.path('/sales/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {
@@ -31,5 +45,5 @@ $scope.save = function () {
 }
 
 $scope.discard = function (){
-    $location.path('/sales/view/' + $scope.paramId);
+    window.history.back();
 }

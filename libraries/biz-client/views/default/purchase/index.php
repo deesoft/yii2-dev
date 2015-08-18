@@ -13,7 +13,7 @@ $angular->requires(['dee.angular']);
 <div class="purchase-index">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Create', '#/purchase/create', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create', '#/purchase/new', ['class' => 'btn btn-success']) ?>
     </p>
 
     <div class="grid-view">
@@ -45,7 +45,7 @@ $angular->requires(['dee.angular']);
                     <td>{{model.number}}</td>
                     <td>{{model.supplier.name}}</td>
                     <td>{{model.branch.name}}</td>
-                    <td>{{model.date}}</td>
+                    <td>{{model.date | date:'dd-MM-yyyy'}}</td>
                     <td>{{model.value}}</td>
                     <td>{{model.discount}}</td>
                     <td>{{model.nmStatus}}</td>
@@ -56,8 +56,8 @@ $angular->requires(['dee.angular']);
                         <td>{{model.updated_by}}</td>
                     -->
                     <td>
-                        <a ng-href="#/purchase/view/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
-                        <a ng-href="#/purchase/update/{{model.id}}" ng-if="model.status == 10"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a ng-href="#/purchase/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                        <a ng-href="#/purchase/{{model.id}}/edit" ng-if="model.status == 10"><span class="glyphicon glyphicon-pencil"></span></a>
                         <a href ng-click="deleteModel(model)" ng-if="model.status == 10"><span class="glyphicon glyphicon-trash"></span></a>
                     </td>
                 </tr>

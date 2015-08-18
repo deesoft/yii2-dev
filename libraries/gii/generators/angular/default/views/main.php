@@ -11,6 +11,7 @@ use yii\helpers\Url;
 
 $restName = StringHelper::basename($generator->modelClass);
 $resourceUrl = '/' . (empty($generator->restControllerID) ? $restName : $generator->restControllerID);
+$prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRoute, '/') . '/';
 
 echo "<?php\n";
 ?>
@@ -23,20 +24,20 @@ use dee\angular\Angular;
 Angular::widget([
     'requires' => ['ngResource','ui.bootstrap',],
     'routes' => [
-        '/' => [
+        '/<?= $prefixRoute; ?>' => [
             'view' => 'index',
             'di' => ['<?= $restName;?>',],
         ],
-        '/view/:id' => [
-            'view' => 'view',
+        '/<?= $prefixRoute; ?>new' => [
+            'view' => 'create',
             'di' => ['<?= $restName;?>',],
         ],
-        '/update/:id' => [
+        '/<?= $prefixRoute; ?>:id/edit' => [
             'view' => 'update',
             'di' => ['<?= $restName;?>',],
         ],
-        '/create' => [
-            'view' => 'create',
+        '/<?= $prefixRoute; ?>:id' => [
+            'view' => 'view',
             'di' => ['<?= $restName;?>',],
         ],
     ],

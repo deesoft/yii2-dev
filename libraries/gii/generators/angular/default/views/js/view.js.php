@@ -9,6 +9,7 @@ use yii\helpers\StringHelper;
 /* @var $generator dee\gii\generators\angular\Generator */
 
 $restName = StringHelper::basename($generator->modelClass);
+$prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRoute, '/') . '/';
 ?>
 
 $location = $injector.get('$location');
@@ -24,7 +25,7 @@ $scope.paramId = $routeParams.id;
 $scope.deleteModel = function(){
     if(confirm('Are you sure you want to delete')){
         <?= $restName;?>.remove({id:$scope.paramId},{},function(){
-            $location.path('/');
+            $location.path('/<?= $prefixRoute; ?>');
         });
     }
 }

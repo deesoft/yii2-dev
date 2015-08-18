@@ -10,7 +10,6 @@ namespace dee\gii\generators\angular;
 use Yii;
 use yii\web\Controller;
 use yii\gii\CodeFile;
-use yii\db\BaseActiveRecord;
 
 /**
  * Generates CRUD
@@ -23,6 +22,8 @@ use yii\db\BaseActiveRecord;
 class Generator extends \dee\gii\generators\crud\Generator
 {
     public $restControllerID;
+    public $baseRestControllerClass = 'yii\rest\ActiveController';
+    public $prefixRoute;
 
     /**
      * @inheritdoc
@@ -47,8 +48,11 @@ class Generator extends \dee\gii\generators\crud\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['restControllerID'], 'trim'],
-            [['restControllerID'], 'match', 'pattern' => '/^[a-z][a-z0-9\\-\\/]*$/', 'message' => 'Only a-z, 0-9, dashes (-) and slashes (/) are allowed.'],
+            [['restControllerID', 'prefixRoute', 'baseControllerClass'], 'trim'],
+            [['restControllerID', 'prefixRoute'], 'match', 'pattern' => '/^[a-z][a-z0-9\\-\\/]*$/', 'message' => 'Only a-z, 0-9, dashes (-) and slashes (/) are allowed.'],
+            [['baseControllerClass'], 'match', 'pattern' => '/^[\w\\\\]*$/', 'message' => 'Only word characters and backslashes are allowed.'],
+            [['baseControllerClass'], 'validateClass', 'params' => ['extends' => Controller::className()]],
+
         ]);
     }
 
@@ -59,6 +63,7 @@ class Generator extends \dee\gii\generators\crud\Generator
     {
         return array_merge(parent::attributeLabels(), [
             'restControllerID' => 'Rest Controller ID',
+            'prefixRoute' => 'Prefix Route'
         ]);
     }
 

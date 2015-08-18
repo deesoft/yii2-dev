@@ -62,3 +62,8 @@ dApp.factory('Movement', ['Rest', function (Rest) {
 dApp.factory('Sales', ['Rest', function (Rest) {
         return Rest('sales/:id');
     }]);
+
+dApp.factory('Transfer', ['Rest', function (Rest) {
+        return Rest('transfer/:id');
+    }]);
+

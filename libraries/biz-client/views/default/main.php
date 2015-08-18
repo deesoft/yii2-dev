@@ -1,6 +1,6 @@
 <?php
 
-use dee\angular\Angular;
+use dee\angular\NgView;
 use biz\client\ModuleAsset;
 use yii\helpers\Json;
 
@@ -17,7 +17,7 @@ ModuleAsset::register($this);
 $this->registerJs("yii.app.initProperties({$options});", yii\web\View::POS_END);
 ?>
 <?=
-Angular::widget([
+NgView::widget([
     'requires' => ['app.angular', 'ui.bootstrap',],
     'routes' => [
         '/site' => [
@@ -27,52 +27,68 @@ Angular::widget([
             'view' => 'purchase/index',
             'di' => ['Purchase',],
         ],
-        '/purchase/view/:id' => [
-            'view' => 'purchase/view',
-            'di' => ['Purchase','Movement'],
+        '/purchase/new' => [
+            'view' => 'purchase/create',
+            'di' => ['Purchase',],
         ],
-        '/purchase/update/:id' => [
+        '/purchase/:id/edit' => [
             'view' => 'purchase/update',
             'di' => ['Purchase',],
         ],
-        '/purchase/create' => [
-            'view' => 'purchase/create',
-            'di' => ['Purchase',],
+        '/purchase/:id' => [
+            'view' => 'purchase/view',
+            'di' => ['Purchase'],
         ],
         '/sales' => [
             'view' => 'sales/index',
             'di' => ['Sales',],
         ],
-        '/sales/view/:id' => [
-            'view' => 'sales/view',
+        '/sales/new' => [
+            'view' => 'sales/create',
             'di' => ['Sales',],
         ],
-        '/sales/update/:id' => [
+        '/sales/:id/edit' => [
             'view' => 'sales/update',
             'di' => ['Sales',],
         ],
-        '/sales/create' => [
-            'view' => 'sales/create',
+        '/sales/:id' => [
+            'view' => 'sales/view',
             'di' => ['Sales',],
+        ],
+        '/transfer' => [
+            'view' => 'transfer/index',
+            'di' => ['Transfer',],
+        ],
+        '/transfer/new' => [
+            'view' => 'transfer/create',
+            'di' => ['Transfer',],
+        ],
+        '/transfer/:id/edit' => [
+            'view' => 'transfer/update',
+            'di' => ['Transfer',],
+        ],
+        '/transfer/:id' => [
+            'view' => 'transfer/view',
+            'di' => ['Transfer'],
         ],
         '/movement' => [
             'view' => 'movement/index',
             'di' => ['Movement',],
         ],
-        '/movement/view/:id' => [
-            'view' => 'movement/view',
+        '/movement/new' => [
+            'view' => 'movement/create',
             'di' => ['Movement',],
         ],
-        '/movement/update/:id' => [
+        '/movement/new/:reff/:id' => [
+            'view' => 'movement/create',
+            'di' => ['Movement',],
+        ],
+        '/movement/:id/edit' => [
             'view' => 'movement/update',
             'di' => ['Movement',],
         ],
-        '/movement/create' => [
-            'view' => 'movement/create',
-            'di' => ['Movement',],
-        ],
-        '/movement/create/:reff/:id' => [
-            'view' => 'movement/create',
+        '/movement/:id' => [
+            'view' => 'movement/view',
             'di' => ['Movement',],
         ],
     ],

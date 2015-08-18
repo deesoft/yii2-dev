@@ -7,6 +7,7 @@ use yii\helpers\StringHelper;
 
 /* @var $model \yii\db\ActiveRecord */
 $model = new $generator->modelClass();
+$prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRoute, '/') . '/';
 
 echo "<?php\n";
 ?>
@@ -23,7 +24,7 @@ $angular->renderJs('js/view.js');
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <p>
-        <a ng-href="#/update/{{paramId}}" class="btn btn-primary">Update</a>
+        <a ng-href="#/<?= $prefixRoute; ?>{{paramId}}/edit" class="btn btn-primary">Update</a>
         <a href ng-click="deleteModel()"class="btn btn-danger">Delete</a>
     </p>
 

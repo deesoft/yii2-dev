@@ -12,6 +12,7 @@ $class = $generator->modelClass;
 $pks = $class::primaryKey();
 
 $restName = StringHelper::basename($generator->modelClass);
+$prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRoute, '/') . '/';
 ?>
 
 $location = $injector.get('$location');
@@ -27,7 +28,7 @@ $scope.save = function(){
 }else{
     echo "        id = model.{$pks[0]};\n";
 }?>
-        $location.path('/view/' + id);
+        $location.path('/<?= $prefixRoute; ?>' + id);
     },function(r){
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {

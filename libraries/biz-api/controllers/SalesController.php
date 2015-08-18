@@ -18,6 +18,7 @@ class SalesController extends AdvanceController
      * @inheritdoc
      */
     public $modelClass = 'biz\api\models\sales\Sales';
+    public $modelSearchClass = 'biz\api\models\sales\searchs\Sales';
 
     /**
      * @inheritdoc
@@ -31,11 +32,6 @@ class SalesController extends AdvanceController
         [MSales::STATUS_DRAFT, MSales::STATUS_PROCESS, 'process', 'processed'],
         [MSales::STATUS_PROCESS, MSales::STATUS_DRAFT, 'reject', 'rejected'],
     ];
-
-    public function actionViewItems($id)
-    {
-        return parent::viewDetail($id, 'items');
-    }
 
     /**
      * @param \dee\base\Event $event

@@ -18,14 +18,14 @@ $angular->renderJs('js/view.js');
                 <a ng-href="#/purchase/" class="btn btn-success btn-sm">Index</a>
             </div>
             <div class="btn-group" ng-if="model.status == 10">
-                <a ng-href="#/purchase/update/{{paramId}}" class="btn btn-primary btn-sm">Update</a>
+                <a ng-href="#/purchase/{{paramId}}/edit" class="btn btn-primary btn-sm">Update</a>
                 <a href="javascript:;" ng-click="deleteModel()"class="btn btn-danger btn-sm">Delete</a>
             </div>
             <div class="btn-group">
                 <a class="btn btn-primary btn-sm" ng-click="confirm()" ng-if="model.status == 10">Confirm</a>
                 <a class="btn btn-danger btn-sm" ng-click="reject()" ng-if="model.status == 20">Reject</a>
                 <a class="btn btn-success btn-sm"
-                   ng-href="#/movement/create/100/{{paramId}}"
+                   ng-href="#/movement/new/100/{{paramId}}"
                    ng-if="model.status == 20">Create GR</a>
             </div>
         </div>
@@ -90,8 +90,8 @@ $angular->renderJs('js/view.js');
                                         <td >{{item.warehouse.name}}</td>
                                         <td >{{item.nmStatus}}</td>
                                         <td >
-                                            <a ng-href="#/movement/view/{{item.id}}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
-                                            <a ng-href="#/movement/update/{{item.id}}" title="Update" ng-if="item.status == 10"><span class="glyphicon glyphicon-pencil"></span></a>
+                                            <a ng-href="#/movement/{{item.id}}" title="View"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                            <a ng-href="#/movement/{{item.id}}/edit" title="Update" ng-if="item.status == 10"><span class="glyphicon glyphicon-pencil"></span></a>
                                             <a href ng-click="applyGR(item)" title="Apply" ng-if="item.status == 10"><span class="glyphicon glyphicon-ok-sign"></span></a>
                                             <a href ng-click="rejectGR(item)" title="Reject" ng-if="item.status == 20"><span class="glyphicon glyphicon-minus-sign"></span></a>
                                             <a href ng-click="deleteGR(item)" title="Delete" ng-if="item.status == 10"><span class="glyphicon glyphicon-trash"></span></a>

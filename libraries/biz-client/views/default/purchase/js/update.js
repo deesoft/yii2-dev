@@ -33,7 +33,7 @@ $scope.save = function () {
     Purchase.update({id: $scope.paramId}, post, 
     function (model) {
         id = model.id;
-        $location.path('/purchase/view/' + id);
+        $location.path('/purchase/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {

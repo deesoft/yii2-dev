@@ -72,7 +72,7 @@ $scope.save = function () {
     });
     Movement.update({id: $scope.paramId}, post, function (model) {
         id = model.id;
-        $location.path('/movement/view/' + id);
+        $location.path('/movement/' + id);
     }, function (r) {
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {

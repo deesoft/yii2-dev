@@ -21,12 +21,12 @@ echo "<?php\n";
 namespace <?= StringHelper::dirname(ltrim($generator->getRestControllerClass(), '\\')) ?>;
 
 use Yii;
-use yii\rest\ActiveController;
+use <?= ltrim($generator->baseRestControllerClass, '\\') ?>;
 
 /**
  * <?= $controllerClass ?> implements the Rest controller for <?= $modelClass ?> model.
  */
-class <?= $controllerClass ?> extends ActiveController
+class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseRestControllerClass) . "\n" ?>
 {
 
     public $modelClass = '<?= $modelClass ?>';
