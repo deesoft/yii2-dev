@@ -12,44 +12,87 @@ $this->registerCss($css);
 ?>
 <?=
 NgView::widget([
-    'name'=>'dAdmin',
-    'requires' => ['ui.bootstrap','ngResource','dee.angular'],
+    'name' => 'dAdmin',
+    'requires' => ['ui.bootstrap', 'ngResource', 'dee.angular'],
     'routes' => [
+        '/' => [
+            'redirectTo' => '/assignment',
+        ],
         '/assignment' => [
             'view' => 'assignment/index',
-            'di' => ['Assignment'],
+            'js' => 'assignment/index.js',
+            'injection' => ['Assignment'],
         ],
         '/assignment/:id' => [
             'view' => 'assignment/view',
-            'di' => ['Assignment'],
+            'js' => 'assignment/view.js',
+            'injection' => ['Assignment'],
         ],
         //
         '/role' => [
             'view' => 'role/index',
-            'di' => ['Item'],
-        ],
-        '/role/create'=>[
-            'show'=>false,
-            'view'=>'role/create',
-            'di'=>['$modalInstance','type','Item']
+            'js' => 'role/index.js',
+            'injection' => ['Item'],
         ],
         '/role/:id*' => [
             'view' => 'role/view',
-            'di' => ['Item'],
+            'js' => 'role/view.js',
+            'injection' => ['Item'],
+        ],
+        '/role/form' => [
+            'show' => false,
+            'view' => 'role/form',
+            'js' => 'role/form.js',
+            'injection' => ['$modalInstance', 'type', 'Item','Rule']
+        ],
+        '/permission' => [
+            'view' => 'permission/index',
+            'js' => 'permission/index.js',
+            'injection' => ['Item'],
+        ],
+        '/permission/:id*' => [
+            'view' => 'permission/view',
+            'js' => 'permission/view.js',
+            'injection' => ['Item'],
+        ],
+        '/rule' => [
+            'view' => 'rule/index',
+            'js' => 'rule/index.js',
+            'injection' => ['Rule'],
+        ],
+        '/rule/form' => [
+            'show' => false,
+            'view' => 'rule/form',
+            'js' => 'rule/form.js',
+            'injection' => ['$modalInstance', 'item', 'Rule']
+        ],
+        '/rule/view' => [
+            'show' => false,
+            'view' => 'rule/view',
+            'js' => 'rule/view.js',
+            'injection' => ['$modalInstance', 'name', 'Rule']
+        ],
+        '/route' => [
+            'view' => 'route/index',
+            'js' => 'route/index.js',
+            'injection' => ['Route'],
+        ],
+        '/error/404' => [
+            'view' => 'error/404',
+        ],
+        'otherwise' => [
+            'link' => '/error/404',
         ],
     ],
-    'otherwise' => [
-        'view'=>'not-found',
-    ],
-    'jsFile' => 'index.js',
+    'js' => 'index.js',
     'useNgApp' => false,
 ]);
 ?>
 <?php
 $url = yii\helpers\Url::canonical();
-$url = yii\helpers\Json::htmlEncode(rtrim($url, '/').'/');
+$url = yii\helpers\Json::htmlEncode(rtrim($url, '/') . '/');
 $js = <<<JS
     dAdmin.prefixUrl = {$url};
         
 JS;
-$this->registerJs($js,  \yii\web\View::POS_END);
+$this->registerJs($js, \yii\web\View::POS_END);

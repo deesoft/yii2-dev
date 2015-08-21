@@ -42,7 +42,6 @@ class AssignmentController extends Controller
         ]);
 
         $query->andFilterWhere(['like', $this->module->usernameField, Yii::$app->request->get('q', '')]);
-
         return $dataProvider;
     }
 

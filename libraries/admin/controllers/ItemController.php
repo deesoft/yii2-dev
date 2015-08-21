@@ -18,6 +18,18 @@ use mdm\admin\components\MenuHelper;
 class ItemController extends Controller
 {
 
+    protected function verbs()
+    {
+        return[
+            'index'=>['GET'],
+            'view'=>['GET'],
+            'create'=>['POST'],
+            'update'=>['PUT'],
+            'delete'=>['DELETE'],
+            'add-child'=>['POST'],
+            'remove-child'=>['POST']
+        ];
+    }
     /**
      * Lists all AuthItem models.
      * @return mixed

@@ -54,11 +54,21 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
             // item
             'GET ' . $id . '/item' => $id . '/item/index',
             'GET ' . $id . '/item/<id>' => $id . '/item/view',
-            'POST ' . $id . '/item/<id>' => $id . '/item/update',
+            'POST ' . $id . '/item/assign/<id>' => $id . '/item/add-child',
+            'POST ' . $id . '/item/revoke/<id>' => $id . '/item/remove-child',
+            'PUT ' . $id . '/item/<id>' => $id . '/item/update',
             'POST ' . $id . '/item' => $id . '/item/create',
-            'POST ' . $id . '/item/assign/<id:\w+>' => $id . '/item/add-child',
-            'POST ' . $id . '/item/revoke/<id:\w+>' => $id . '/item/remove-child',
-
+            'DELETE ' . $id . '/item/<id>' => $id . '/item/delete',
+            // rule
+            'GET ' . $id . '/rule' => $id . '/rule/index',
+            'GET ' . $id . '/rule/<id>' => $id . '/rule/view',
+            'POST ' . $id . '/rule/<id>' => $id . '/rule/update',
+            'POST ' . $id . '/rule' => $id . '/rule/create',
+            'DELETE ' . $id . '/rule/<id>' => $id . '/rule/delete',
+            // route
+            'GET ' . $id . '/route' => $id . '/route/index',
+            'POST ' . $id . '/route' => $id . '/route/add',
+            'DELETE ' . $id . '/route' => $id . '/route/remove',
             ], false);
     }
 }

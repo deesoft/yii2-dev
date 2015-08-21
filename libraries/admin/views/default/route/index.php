@@ -4,40 +4,13 @@ use dee\angular\NgView;
 
 /* @var $this yii\web\View */
 /* @var $widget NgView */
-?>
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-success box-solid">
-            <div class="box-header with-border">
-                <h3 class="box-title">Assignment</h3>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="box-body form-horizontal">
-                        <div class="form-group" >
-                            <label class="col-sm-3 control-label">Username</label>
-                            <div class="col-sm-9">
-                                <p class="form-control-static" >{{model.username}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div style="padding: 30px;">
-                        <alert ng-repeat="alert in alerts" type="{{alert.type}}" dismiss-on-timeout="{{alert.time}}"
-                               close="closeAlert($index)">{{alert.msg}}</alert>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-</div>
+?>
 <div class="row">
     <div class="col-md-6">
         <div class="box box-success box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Assigned:</h3>
+                <h3 class="box-title">Routes:</h3>
                 <div class="box-tools pull-right">
                     <div class="has-feedback">
                         <input type="text" class="form-control input-sm"
@@ -53,8 +26,11 @@ use dee\angular\NgView;
                     <button class="btn btn-default btn-sm" ng-click="changeAll1()">
                         <i class="fa" ng-class="{'fa-check':all1,'fa-square-o':!all1}"></i>
                     </button>
-                    <button class="btn btn-default btn-sm" ng-click="clickRevoke()">
+                    <button class="btn btn-default btn-sm" ng-click="remove()">
                         <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-default btn-sm" ng-click="">
+                        <i class="fa fa-plus"></i>
                     </button>
                     <div class="pull-right">
                         {{page1.begin + 1}}-{{page1.end}} of {{page1.total}}
@@ -73,10 +49,7 @@ use dee\angular\NgView;
                                 <td style="width: 35px;">
                                     <input type="checkbox" ng-model="item.selected">
                                 </td>
-                                <td style="width: 40%;">
-                                    <span class="label" ng-class="{'label-info':item.type == 1,'label-warning':item.type == 2}">{{item.name}}</span>
-                                </td>
-                                <td >{{item.description}}</td>
+                                <td ><span class="label label-default">{{item.name}}</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -103,8 +76,11 @@ use dee\angular\NgView;
                     <button class="btn btn-default btn-sm" ng-click="changeAll2()">
                         <i class="fa" ng-class="{'fa-check':all2,'fa-square-o':!all2}"></i>
                     </button>
-                    <button class="btn btn-default btn-sm" ng-click="clickAssign()">
+                    <button class="btn btn-default btn-sm" ng-click="add()">
                         <i class="fa fa-arrow-left"></i>
+                    </button>
+                    <button class="btn btn-default btn-sm" ng-click="refresh()">
+                        <i class="fa fa-refresh"></i>
                     </button>
                     <div class="pull-right">
                         {{page2.begin + 1}}-{{page2.end}} of {{page2.total}}
@@ -123,10 +99,7 @@ use dee\angular\NgView;
                                 <td style="width: 35px;">
                                     <input type="checkbox" ng-model="item.selected">
                                 </td>
-                                <td style="width: 40%;">
-                                    <span class="label" ng-class="{'label-info':item.type == 1,'label-warning':item.type == 2}">{{item.name}}</span>
-                                </td>
-                                <td >{{item.description}}</td>
+                                <td ><span class="label label-default">{{item.name}}</span></td>
                             </tr>
                         </tbody>
                     </table>

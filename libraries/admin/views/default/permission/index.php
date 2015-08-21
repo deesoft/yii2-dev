@@ -7,7 +7,7 @@ use dee\angular\NgView;
 ?>
 <div class="box box-success box-solid">
     <div class="box-header with-border">
-        <h3 class="box-title">Roles</h3>
+        <h3 class="box-title">Permission</h3>
     </div>
     <div class="box-body">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"
@@ -36,10 +36,10 @@ use dee\angular\NgView;
                 <tbody>
                     <tr ng-repeat="model in filtered.slice(provider.offset, provider.offset + provider.itemPerPage)">
                         <td width="35px">{{provider.offset + $index + 1}}</td>
-                        <td><span class="label label-info">{{model.name}}</span></td>
+                        <td><span class="label label-warning">{{model.name}}</span></td>
                         <td>{{model.description}}</td>
                         <td width="60px">
-                            <a ng-href="#/role/{{model.name | escape}}"><span class="glyphicon glyphicon-eye-open"></span></a>
+                            <a ng-href="#/permission/{{model.name | escape}}"><span class="glyphicon glyphicon-eye-open"></span></a>
                             <a href ng-click="deleteItem(model)"><span class="glyphicon glyphicon-trash"></span></a>
                         </td>
                     </tr>

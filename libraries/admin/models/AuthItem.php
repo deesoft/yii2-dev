@@ -202,18 +202,14 @@ class AuthItem extends \yii\base\Model
 
         return $result[$type];
     }
-    private static $_items;
+    private $_avaliables;
     private static $_rules;
     private $_children;
 
     public function getChildren()
     {
-        $manager = Yii::$app->getAuthManager();
-        if (self::$_items === null) {
-            self::$_items = array_merge($manager->getRoles(), $manager->getPermissions());
-            uasort(self::$_items, [get_called_class(), 'compare']);
-        }
         if ($this->_children === null) {
+            $manager = Yii::$app->getAuthManager();
             $this->_children = array_values($manager->getChildren($this->name));
             usort($this->_children, [get_called_class(), 'compare']);
         }
@@ -222,19 +218,27 @@ class AuthItem extends \yii\base\Model
 
     public function getAvaliables()
     {
-        $children = $this->getChildren();
-        $items = self::$_items;
-        unset($items[$this->name]);
-        foreach ($children as $item) {
-            unset($items[$item->name]);
+        if ($this->_avaliables === null) {
+            $manager = Yii::$app->getAuthManager();
+            $items = [];
+            if ($this->type == Item::TYPE_ROLE) {
+                $items = array_merge($manager->getRoles(), $manager->getPermissions());
+            } elseif ($this->type == Item::TYPE_PERMISSION) {
+                $items = $manager->getPermissions();
+            }
+            uasort($items, [get_called_class(), 'compare']);
+            foreach ($this->getChildren() as $item) {
+                unset($items[$item->name]);
+            }
+            $this->_avaliables = array_values($items);
         }
-        return array_values($items);
+        return $this->_avaliables;
     }
 
     public function getRules()
     {
         $manager = Yii::$app->getAuthManager();
-        if(self::$_rules === null){
+        if (self::$_rules === null) {
             self::$_rules = array_keys($manager->getRules());
         }
         return self::$_rules;

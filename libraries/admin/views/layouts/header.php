@@ -17,6 +17,7 @@ use yii\web\View;
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#assignment">Assignment</a></li>
                     <li><a href="#role">Role</a></li>
+                    <li><a href="#permission">Permission</a></li>
                     <li><a href="#rule">Rule</a></li>
                     <li><a href="#route">Route</a></li>
                     <li><a href="#menu">Menu</a></li>

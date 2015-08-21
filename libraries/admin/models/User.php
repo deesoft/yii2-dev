@@ -90,7 +90,7 @@ class User extends \yii\db\ActiveRecord
     {
         return[
             'assignments',
-            'avaliables'
+            'avaliables',
         ];
     }
 }

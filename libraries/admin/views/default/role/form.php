@@ -1,14 +1,13 @@
 <?php
 
 use yii\web\View;
-use dee\angular\Angular;
+use dee\angular\NgView;
 
 //use yii\helpers\Html;
 
 /* @var $this View */
-/* @var $angular Angular */
+/* @var $widget NgView */
 
-$angular->renderJs('js/create.js');
 ?>
 <div class="box box-solid box-primary">
     <div class="box-header with-border">
@@ -40,7 +39,7 @@ $angular->renderJs('js/create.js');
                 <label class="col-sm-3 control-label">Rule</label>
                 <div class="col-sm-9">
                     <select class="form-control" ng-model="model.ruleName"
-                            ng-options="rule for rule in rules"></select>
+                            ng-options="rule.name for rule in rules"></select>
                     <div ng-if="modelError.name" class="help-block">{{modelError.ruleName}}</div>
                 </div>
             </div>
@@ -55,6 +54,8 @@ $angular->renderJs('js/create.js');
                 <div class="col-sm-9 col-sm-offset-3">
                     <button class="btn btn-primary" ng-click="ok()" type="submit">
                         <span class="fa fa-save"></span></button>
+                    <button class="btn btn-danger" ng-click="cancel()">
+                        <span class="fa fa-remove"></span></button>
                 </div>
             </div>
         </div>

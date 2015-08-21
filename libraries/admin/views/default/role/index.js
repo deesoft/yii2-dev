@@ -3,8 +3,9 @@ var search = $location.search();
 var $filter = $injector.get('$filter');
 var $modal = $injector.get('$modal');
 
-
 $scope.rows = [];
+$scope.q = '';
+
 query = function () {
     Item.query({
         type: 1,
@@ -26,11 +27,11 @@ $scope.provider = {
 };
 
 $scope.filter = function () {
-    $scope.filtered = $filter('filter')($scope.rows, {type: $scope.qT, '$': $scope.q});
+    $scope.filtered = $filter('filter')($scope.rows, $scope.q);
 }
 
 $scope.openModal = function () {
-    $modal.open(angular.extend(dAdmin.views['/role/create'], {
+    $modal.open(angular.extend(dAdmin.templates['/role/form'], {
         animation: true,
         resolve: {
             type: function () {
