@@ -1,11 +1,11 @@
 <?php
 
-use dee\angular\Angular;
+use dee\angular\NgView;
 
 /* @var $this yii\web\View */
-/* @var $angular Angular */
+/* @var $widget NgView */
 
-$angular->renderJs('js/form.js');
+$widget->renderJs('_form.js');
 ?>
 
 <div class="sales-form">
@@ -63,7 +63,7 @@ $angular->renderJs('js/form.js');
                 </div>
             </div>
 
-            <?= $this->render('_form_detail', ['angular' => $angular]) ?>
+            <?= $this->render('_form_detail', ['widget' => $widget]) ?>
         </div>
     </form>
 </div>

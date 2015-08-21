@@ -1,12 +1,11 @@
 <?php
 
-use dee\angular\Angular;
+use dee\angular\NgView;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $angular Angular */
+/* @var $widget NgView */
 
-$angular->renderJs('js/view.js');
 ?>
 
 <div class="transfer-view">

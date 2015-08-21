@@ -18,82 +18,101 @@ $this->registerJs("yii.app.initProperties({$options});", yii\web\View::POS_END);
 ?>
 <?=
 NgView::widget([
-    'requires' => ['app.angular', 'ui.bootstrap',],
+    'requires' => ['app.angular', 'ui.bootstrap', 'dee.angular'],
     'routes' => [
         '/site' => [
-            'view' => 'site/index'
+            'view' => 'site/index',
         ],
         '/purchase' => [
             'view' => 'purchase/index',
-            'di' => ['Purchase',],
+            'js' => 'purchase/index.js',
+            'injection' => ['Purchase',],
         ],
         '/purchase/new' => [
             'view' => 'purchase/create',
-            'di' => ['Purchase',],
+            'js' => 'purchase/create.js',
+            'injection' => ['Purchase',],
         ],
         '/purchase/:id/edit' => [
             'view' => 'purchase/update',
-            'di' => ['Purchase',],
+            'js' => 'purchase/update.js',
+            'injection' => ['Purchase',],
         ],
         '/purchase/:id' => [
             'view' => 'purchase/view',
-            'di' => ['Purchase'],
+            'js' => 'purchase/view.js',
+            'injection' => ['Purchase'],
         ],
         '/sales' => [
             'view' => 'sales/index',
-            'di' => ['Sales',],
+            'js' => 'sales/index.js',
+            'injection' => ['Sales',],
         ],
         '/sales/new' => [
             'view' => 'sales/create',
-            'di' => ['Sales',],
+            'js' => 'sales/create.js',
+            'injection' => ['Sales',],
         ],
         '/sales/:id/edit' => [
             'view' => 'sales/update',
-            'di' => ['Sales',],
+            'js' => 'sales/update.js',
+            'injection' => ['Sales',],
         ],
         '/sales/:id' => [
             'view' => 'sales/view',
-            'di' => ['Sales',],
+            'js' => 'sales/view.js',
+            'injection' => ['Sales',],
         ],
         '/transfer' => [
             'view' => 'transfer/index',
-            'di' => ['Transfer',],
+            'js' => 'transfer/index.js',
+            'injection' => ['Transfer',],
         ],
         '/transfer/new' => [
             'view' => 'transfer/create',
-            'di' => ['Transfer',],
+            'js' => 'transfer/create.js',
+            'injection' => ['Transfer',],
         ],
         '/transfer/:id/edit' => [
             'view' => 'transfer/update',
-            'di' => ['Transfer',],
+            'js' => 'transfer/update.js',
+            'injection' => ['Transfer',],
         ],
         '/transfer/:id' => [
             'view' => 'transfer/view',
-            'di' => ['Transfer'],
+            'js' => 'transfer/view.js',
+            'injection' => ['Transfer'],
         ],
         '/movement' => [
             'view' => 'movement/index',
-            'di' => ['Movement',],
+            'js' => 'movement/index.js',
+            'injection' => ['Movement',],
         ],
         '/movement/new' => [
             'view' => 'movement/create',
-            'di' => ['Movement',],
+            'js' => 'movement/create.js',
+            'injection' => ['Movement',],
         ],
         '/movement/new/:reff/:id' => [
             'view' => 'movement/create',
-            'di' => ['Movement',],
+            'js' => 'movement/create.js',
+            'injection' => ['Movement',],
         ],
         '/movement/:id/edit' => [
             'view' => 'movement/update',
-            'di' => ['Movement',],
+            'js' => 'movement/update.js',
+            'injection' => ['Movement',],
         ],
         '/movement/:id' => [
             'view' => 'movement/view',
-            'di' => ['Movement',],
+            'js' => 'movement/view.js',
+            'injection' => ['Movement',],
         ],
+        'otherwise' => [
+            'view' => 'site/error'
+        ]
     ],
-    'defaultPath' => '/site',
-    'jsFile' => 'main.js',
+    'js' => 'main.js',
     'useNgApp' => false,
 ]);
 ?>
