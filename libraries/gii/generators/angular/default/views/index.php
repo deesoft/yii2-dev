@@ -26,7 +26,7 @@ use yii\helpers\Html;
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-index">
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
     <p>
-        <?= "<?= " ?>Html::a('Create', '#/<?= $prefixRoute; ?>new', ['class' => 'btn btn-success']) ?>
+        <?= "<?= " ?>Html::a('Create', '#/<?= $prefixRoute; ?>create', ['class' => 'btn btn-success']) ?>
     </p>
     <div class="grid-view">
         <table class="table table-striped table-bordered">
