@@ -15,14 +15,12 @@ $prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRout
 
 echo "<?php\n";
 ?>
-use dee\angular\Angular;
+use dee\angular\NgView;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $angular Angular */
+/* @var $widget NgView */
 
-$angular->renderJs('js/index.js');
-$angular->requires(['dee.angular']);
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-index">

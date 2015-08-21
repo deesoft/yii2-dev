@@ -15,12 +15,12 @@ if (empty($safeAttributes)) {
 
 echo "<?php\n";
 ?>
-use dee\angular\Angular;
+use dee\angular\NgView;
 
 /* @var $this yii\web\View */
-/* @var $angular Angular */
+/* @var $widget NgView */
 
-$angular->renderJs('js/form.js');
+$widget->renderJs('js/form.js');
 ?>
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-form">

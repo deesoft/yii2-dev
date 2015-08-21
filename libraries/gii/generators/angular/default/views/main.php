@@ -16,28 +16,32 @@ $prefixRoute = empty($generator->prefixRoute) ? '' : trim($generator->prefixRout
 echo "<?php\n";
 ?>
 use yii\helpers\Url;
-use dee\angular\Angular;
+use dee\angular\NgView;
 
 /* @var $this yii\web\View */
 ?>
 <?php echo "<?=\n" ?>
-Angular::widget([
-    'requires' => ['ngResource','ui.bootstrap',],
+NgView::widget([
+    'requires' => ['ngResource','ui.bootstrap','dee.angular'],
     'routes' => [
         '/<?= $prefixRoute; ?>' => [
             'view' => 'index',
-            'di' => ['<?= $restName;?>',],
+            'js' => 'js/index.js',
+            'injection' => ['<?= $restName;?>',],
         ],
-        '/<?= $prefixRoute; ?>new' => [
+        '/<?= $prefixRoute; ?>create' => [
             'view' => 'create',
-            'di' => ['<?= $restName;?>',],
+            'js' => 'js/create.js',
+            'injection' => ['<?= $restName;?>',],
         ],
         '/<?= $prefixRoute; ?>:id/edit' => [
             'view' => 'update',
-            'di' => ['<?= $restName;?>',],
+            'js' => 'js/update.js',
+            'injection' => ['<?= $restName;?>',],
         ],
         '/<?= $prefixRoute; ?>:id' => [
             'view' => 'view',
+            'js' => 'js/view.js',
             'di' => ['<?= $restName;?>',],
         ],
     ],
