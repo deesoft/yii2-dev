@@ -32,9 +32,9 @@ $scope.save = function(){
     },function(r){
         $scope.errors = {status: r.status, text: r.statusText, data: {}};
         if (r.status == 422) {
-            for (key in r.data) {
-                $scope.errors.data[r.data[key].field] = r.data[key].message;
-            }
+            angular.forEach(r.data,function(err) {
+                $scope.errors.data[err.field] = err.message;
+            });
         }
     });
 }

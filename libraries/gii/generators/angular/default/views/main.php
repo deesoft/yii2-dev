@@ -42,7 +42,7 @@ NgView::widget([
         '/<?= $prefixRoute; ?>:id' => [
             'view' => 'view',
             'js' => 'js/view.js',
-            'di' => ['<?= $restName;?>',],
+            'injection' => ['<?= $restName;?>',],
         ],
     ],
     'resources' => [
