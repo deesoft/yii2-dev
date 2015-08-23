@@ -2,7 +2,7 @@
     "name": "deesoft/yii2-dev",
     "description": "Yii2 libraries development project",
     "keywords": ["yii2", "extension", "main"],
-    "type": "project",
+    "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -17,32 +17,24 @@
     },
     "minimum-stability": "dev",
     "replace": {
-        "deesoft/yii2-gii": "self.version",
-        "deesoft/yii2-console": "self.version",
-        "deesoft/yii2-angular": "self.version",
-        "deesoft/yii2-rest": "self.version",
-        "deesoft/yii2-rest-base": "self.version",
-        "deesoft/yii2-base": "self.version",
-        "deesoft/yii2-easyui": "self.version",
-        "deesoft/yii2-adminlte": "self.version",
-        "deesoft/biz3-api": "self.version",
-        "deesoft/biz3-client": "self.version"
+        "deesoft/yii2-gii": "*",
+        "deesoft/yii2-console": "*",
+        "deesoft/yii2-angular": "*",
+        "deesoft/yii2-rest": "*",
+        "deesoft/yii2-base": "*",
+        "deesoft/yii2-adminlte": "*",
+        "deesoft/biz3-api": "*",
+        "deesoft/biz3-client": "*",
+        "mdmsoft/yii2-admin": "*"
     },
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.4",
         "yiisoft/yii2-bootstrap": "~2.0",
-        "mdmsoft/yii2-admin": "~2.0",
         "mdmsoft/yii2-autonumber": "~1.0",
         "mdmsoft/yii2-format-converter": "~1.0",
         "mdmsoft/yii2-ar-behaviors": "~1.0",
         "deesoft/yii2-composer": "~1.0",
-        "deesoft/yii2-console": "~1.0",
-        "deesoft/yii2-angular": "~1.0",
-        "deesoft/yii2-rest": "~1.0",
-        "deesoft/yii2-rest-base": "~1.0",
-        "deesoft/yii2-base": "~1.0",
-        "deesoft/yii2-adminlte": "~1.0",
         "bower-asset/AdminLTE": "~2.0",
         "rmrevin/yii2-fontawesome": "~2.0",
         "bower-asset/angular": "~1.3",
@@ -66,29 +58,27 @@
     "autoload": {
         "psr-4": {
             "dee\\gii\\": "libraries/gii",
-            "dee\\easyui\\": "libraries/easyui",
             "dee\\console\\": "libraries/console",
             "dee\\base\\": "libraries/base",
             "dee\\rest\\": "libraries/rest",
-            "dee\\rest\\base\\": "libraries/rest-base",
             "dee\\angular\\": "libraries/angular",
             "dee\\adminlte\\": "libraries/adminlte",
-            "dee\\admin\\": "libraries/admin",
+            "mdm\\admin\\": "libraries/admin",
             "biz\\api\\": "libraries/biz-api",
             "biz\\client\\": "libraries/biz-client"
+        },
+        "psr-0": {
+            "dee\\Bootstrap": "Bootstrap"
         }
     },
     "extra": {
-        "bootstrap": [
-            "dee\\angular\\Bootstrap",
-            "dee\\console\\Bootstrap"
-        ],
+        "bootstrap": "dee\\Bootstrap",
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
             "bower-asset-library": "vendor/bower"
         },
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.x-dev"
         },
         "symlinks": {
             "application/vendor": "vendor",
