@@ -29,5 +29,5 @@ use <?= ltrim($generator->baseRestControllerClass, '\\') ?>;
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseRestControllerClass) . "\n" ?>
 {
 
-    public $modelClass = '<?= $modelClass ?>';
+    public $modelClass = '<?= ltrim($generator->modelClass, '\\') ?>';
 }
