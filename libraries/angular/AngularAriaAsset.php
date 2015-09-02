@@ -3,7 +3,7 @@
 namespace dee\angular;
 
 /**
- * AngularAnimateAsset
+ * AngularAriaAsset
  *
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.1
