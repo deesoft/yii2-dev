@@ -15,6 +15,7 @@ $restName = StringHelper::basename($generator->modelClass);
 ?>
 var $location = $injector.get('$location');
 var search = $location.search();
+var $pageInfo = $injector.get('$pageInfo');
 
 // data provider
 $scope.provider = {
@@ -35,7 +36,7 @@ query = function(){
         page: search.page,
         sort: search.sort,
     }, function (rows, headerCallback) {
-        yii.angular.getPageInfo($scope.provider, headerCallback);
+        $pageInfo(headerCallback, $scope.provider);
         $scope.rows = rows;
     });
 }

@@ -34,10 +34,12 @@ $scope.save = function(){
 }?>
         $location.path('/<?= $prefixRoute; ?>' + id);
     },function(r){
-        $scope.errors = {status: r.status, text: r.statusText, data: {}};
+        $scope.errors = {};
+        $scope.errorStatus = r.status;
+        $scope.errorText = r.statusTest;
         if (r.status == 422) {
             angular.forEach(r.data,function(err) {
-                $scope.errors.data[err.field] = err.message;
+                $scope.errors[err.field] = err.message;
             });
         }
     });

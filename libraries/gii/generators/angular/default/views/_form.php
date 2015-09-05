@@ -25,10 +25,10 @@ $widget->renderJs('js/form.js');
 
 <div class="<?= StringHelper::basename($generator->controllerID) ?>-form">
     <form name="Form" >
-        <div ng-if="errors.status">
-            <h1>Error {{errors.status}}: {{errors.text}}</h1>
+        <div ng-if="errorStatus">
+            <h1>Error {{errorStatus}}: {{errorText}}</h1>
             <ul>
-                <li ng-repeat="(field,msg) in errors.data">{{field}}: {{msg}}</li>
+                <li ng-repeat="(field,msg) in errors">{{field}}: {{msg}}</li>
             </ul>
         </div>
 
@@ -38,10 +38,10 @@ $widget->renderJs('js/form.js');
         $attrLabel = $model->getAttributeLabel($attribute);
         $attrId = Html::getInputId($model, $attribute);
         echo <<<FIELD
-        <div class="{$containerCls}" ng-class="{error:errors.{$attribute}}">
+        <div class="{$containerCls}" ng-class="{error:!!errors.{$attribute}}">
             <label for="{$attrId}" class="control-label">{$attrLabel}</label>
             <input id="{$attrId}" name="{$attribute}" class="form-control" ng-model="model.{$attribute}">
-            <div class="help-block">{{errors.{$attribute}}}</div>
+            <div class="help-block" ng-bind"errors.{$attribute}"></div>
         </div>
 
 FIELD;

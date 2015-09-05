@@ -4,7 +4,6 @@
  */
 
 use yii\helpers\StringHelper;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $generator dee\gii\generators\angular\Generator */
@@ -22,7 +21,7 @@ use dee\angular\NgView;
 ?>
 <?php echo "<?=\n" ?>
 NgView::widget([
-    'requires' => ['ngResource','ui.bootstrap','dee.angular'],
+    'requires' => ['ngResource','ui.bootstrap','dee.ui'],
     'routes' => [
         '/<?= $prefixRoute; ?>' => [
             'view' => 'index',
@@ -47,12 +46,12 @@ NgView::widget([
     ],
     'resources' => [
         '<?= $restName;?>' => [
-            'url' => '<?=Url::to([$resourceUrl])?>',
+        'url' => '<?= rtrim(Yii::$app->homeUrl,'/')."{$resourceUrl}/:id"?>',
             'actions' =>[
                 'update' => [
                     'method' => 'PUT',
                 ],
             ]
         ]
-    ]
+    ], 
 ]);?>

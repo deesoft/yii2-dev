@@ -1,12 +1,12 @@
-$scope.errors = {data:{}};
+$scope.errors = {};
 
 jQuery('form').on('keypress change',':input[ng-model]',function(){
     var field = $(this).attr('name');
-    if($scope.errors.status){
-        delete $scope.errors.status;
-        delete $scope.errors.text;
+    if($scope.errorStatus){
+        delete $scope.errorStatus;
+        delete $scope.errorText;
     }
-    if($scope.errors.data[field]){
-        delete $scope.errors.data[field];
+    if($scope.errors[field]){
+        delete $scope.errors[field];
     }
 });
