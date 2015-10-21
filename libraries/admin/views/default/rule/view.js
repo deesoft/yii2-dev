@@ -1,12 +1,5 @@
-$sce = $injector.get('$sce');
-
-$scope.name = name;
-Rule.get({
-    id: name,
-    expand: 'content'
-}, function (r) {
-    $scope.content = $sce.trustAsHtml(r.content);
-});
+$scope.name = item.name;
+$scope.content = $sce.trustAsHtml(item.content);
 
 $scope.close = function () {
     $modalInstance.dismiss('cancel');

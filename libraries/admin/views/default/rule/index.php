@@ -34,8 +34,8 @@ use dee\angular\NgView;
         <div class="grid-view">
             <table class="table table-striped table-bordered">
                 <tbody>
-                    <tr ng-repeat="model in filtered.slice(provider.offset, provider.offset + provider.itemPerPage)">
-                        <td width="35px">{{provider.offset + $index + 1}}</td>
+                    <tr ng-repeat="model in filtered|limitTo:perPage:(currentPage-1)*perPage">
+                        <td width="35px">{{(currentPage-1)*perPage + $index + 1}}</td>
                         <td>{{model.name}}</td>
                         <td><a href ng-click="showItem(model)">{{model.className}}</a></td>
                         <td width="60px">
@@ -45,9 +45,9 @@ use dee\angular\NgView;
                     </tr>
                 </tbody>
             </table>
-            <pagination total-items="filtered.length" ng-model="provider.page"
-                        max-size="3" items-per-page="provider.itemPerPage"
-                        ng-change="provider.paging()" direction-links="false"
+            <pagination total-items="filtered.length" ng-model="currentPage"
+                        max-size="3" items-per-page="perPage"
+                        direction-links="false"
                         first-text="&laquo;" last-text="&raquo;"
                         class="pagination-sm" boundary-links="true"></pagination>
         </div>

@@ -6,18 +6,28 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $widget NgView */
 
+$this->registerCss(<<<CSS
+[d-sort] .asc{
+    color:red;
+}
+[d-sort] .desc{
+    color:yellow;
+}
+
+CSS
+)
 ?>
 
 <div class="purchase-index">
     <page title="Purchase"></page>
     <p>
-        <?= Html::a('Create', '#/product/new', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create', '#/purchase/new', ['class' => 'btn btn-success']) ?>
     </p>
 
     <div class="grid-view">
         <table class="table table-striped table-bordered">
             <thead>
-                <tr d-sort ng-model="provider.sort" ng-change="provider.sorting()">
+                <tr d-sort="search.sort" d-change="setSearch('sort',$value)">
                     <th >#</th>
                     <th><a href sort-field="id" >Id</a></th>
                     <th><a href sort-field="number">Number</a></th>
@@ -38,7 +48,7 @@ use yii\helpers\Html;
             </thead>
             <tbody>
                 <tr ng-repeat="model in rows">
-                    <td>{{(provider.page - 1) * provider.itemPerPage + $index + 1}}</td>
+                    <td>{{(pagination.currentPage - 1) * pagination.perPage + $index + 1}}</td>
                     <td>{{model.id}}</td>
                     <td>{{model.number}}</td>
                     <td>{{model.supplier.name}}</td>
@@ -61,9 +71,9 @@ use yii\helpers\Html;
                 </tr>
             </tbody>
         </table>
-        <pagination total-items="provider.totalItems" ng-model="provider.page"
-                    max-size="5" items-per-page="provider.itemPerPage"
-                    ng-change="provider.paging()"
+        <pagination total-items="pagination.totalCount" ng-model="pagination.currentPage"
+                    max-size="5" items-per-page="pagination.perPage"
+                    ng-change="setSearch('page',pagination.currentPage)"
                     class="pagination-sm" boundary-links="true"></pagination>
     </div>
 </div>

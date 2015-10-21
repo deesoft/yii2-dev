@@ -21,15 +21,16 @@ class ItemController extends Controller
     protected function verbs()
     {
         return[
-            'index'=>['GET', 'HEAD'],
-            'view'=>['GET', 'HEAD'],
-            'create'=>['POST'],
-            'update'=>['PUT'],
-            'delete'=>['DELETE'],
-            'add-child'=>['POST'],
-            'remove-child'=>['POST']
+            'index' => ['GET', 'HEAD'],
+            'view' => ['GET', 'HEAD'],
+            'create' => ['POST'],
+            'update' => ['PUT'],
+            'delete' => ['DELETE'],
+            'add-child' => ['POST'],
+            'remove-child' => ['POST']
         ];
     }
+
     /**
      * Lists all AuthItem models.
      * @return mixed
@@ -45,9 +46,13 @@ class ItemController extends Controller
         } else {
             $items = array_merge($manager->getRoles(), $manager->getPermissions());
         }
-        return array_values(array_filter($items, function ($item) {
-                return $item->name[0] !== '/';
-            }));
+
+        return array_values(array_map(function($item) {
+                return new AuthItem($item);
+            }, array_filter($items, function ($item) {
+                    return $item->name[0] !== '/';
+                }
+        )));
     }
 
     /**
@@ -180,6 +185,7 @@ class ItemController extends Controller
     protected function findModel($id)
     {
         $manager = Yii::$app->getAuthManager();
+        $id = base64_decode($id);
         $item = $manager->getRole($id);
         $item = $item ? : $manager->getPermission($id);
         if ($item) {

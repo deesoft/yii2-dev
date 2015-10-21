@@ -16,8 +16,8 @@ use dee\angular\NgView;
                     <td width="35px"></td>
                     <td width="300px">
                         <div class="has-feedback">
-                            <input type="text" class="form-control input-sm" placeholder="Search" ng-model="q"
-                                   ng-change="search()">
+                            <input type="text" class="form-control input-sm" placeholder="Search" ng-model="search.q"
+                                   ng-change="setSearch('q',search.q)" focus-me="q" ng-model-options="{updateOn:'blur change'}">
                             <span class="glyphicon glyphicon-search form-control-feedback"></span>
                         </div>
                     </td>
@@ -29,20 +29,17 @@ use dee\angular\NgView;
             <table class="table table-striped table-bordered">
                 <tbody>
                     <tr ng-repeat="model in rows">
-                        <td width="35px;">{{(provider.page - 1) * provider.itemPerPage + $index + 1}}</td>
-                        <td>{{model.username}}</td>
-                        <td><a ng-repeat="role in model.assignments" ng-href="#{{role.type == 1?'role':'permission'}}/{{role.name}}">
+                        <td width="35px;">{{(pagination.currentPage - 1) * pagination.perPage + $index + 1}}</td>
+                        <td><a ng-href="#/assignment/{{model.id}}" ng-bind="model.username"></a></td>
+                        <td><a ng-repeat="role in model.assignments" ng-href="#/item/{{role.type}}/{{role.name | base64Encode}}">
                                 <span class="label" ng-class="{'label-danger':role.type == 1,'label-success':role.type == 2}">{{role.name}}</span></a>
-                        </td>
-                        <td width="40px">
-                            <a ng-href="#/assignment/{{model.id}}"><span class="glyphicon glyphicon-eye-open"></span></a>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <pagination total-items="provider.totalItems" ng-model="provider.page"
-                        max-size="3" items-per-page="provider.itemPerPage"
-                        ng-change="provider.paging()" direction-links="false"
+            <pagination total-items="pagination.totalCount" ng-model="pagination.currentPage"
+                        max-size="3" items-per-page="pagination.perPage"
+                        ng-change="setSearch('page',pagination.currentPage)" direction-links="false"
                         first-text="&laquo;" last-text="&raquo;"
                         class="pagination-sm" boundary-links="true"></pagination>
         </div>

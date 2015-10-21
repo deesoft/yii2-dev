@@ -1,39 +1,39 @@
+var $location = $injector.get('$location');
+var cast = $injector.get('CastFieldToStr');
 
-$location = $injector.get('$location');
-$routeParams = $injector.get('$routeParams');
+if(model.group_id){
+    model.group_id = model.group_id.toString();
+}
+if(model.category_id){
+    model.category_id = model.category_id.toString();
+}
 
-$scope.paramId = $routeParams.id;
-// model
-Product.get({
-    id: $scope.paramId,
-}, function (row) {
-    $scope.model = row;
-});
+$scope.model = model;
+$scope.save = save;
+$scope.discard = discard;
 
-// save Item
-$scope.save = function () {
-    var post = {};
-    
-    post.code = $scope.model.code;
-    post.name = $scope.model.name;
-    post.group_id = $scope.model.group_id;
-    post.category_id = $scope.model.category_id;
+function save() {
+//    var post = {};
+//
+//    post.code = $scope.model.code;
+//    post.name = $scope.model.name;
+//    post.group_id = $scope.model.group_id;
+//    post.category_id = $scope.model.category_id;
 
-    Product.update({id:$scope.paramId}, post, function (model) {
-        id = model.id;
-        $location.path('/product/' + id);
+    $scope.model.$update().then(function (model) {
+        $location.path('/product/' + model.id);
     }, function (r) {
         $scope.errors = {};
         if (r.status == 422) {
-            angular.forEach(r.data,function(v){
+            angular.forEach(r.data, function (v) {
                 $scope.errors[v.field] = v.message;
             });
-        }else{
-            
+        } else {
+
         }
     });
 }
 
-$scope.discard = function (){
+function discard() {
     window.history.back();
 }

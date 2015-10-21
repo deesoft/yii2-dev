@@ -31,7 +31,7 @@ $scope.filter = function () {
 }
 
 $scope.openModal = function (model) {
-    $modal.open(angular.extend({},module.templates['/menu/form'], {
+    $modal.open(angular.merge({},widget.routes['/menu/form'], {
         animation: true,
         resolve: {
             model: function () {

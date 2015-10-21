@@ -28,4 +28,18 @@ class AngularAsset extends \yii\web\AssetBundle
     public $depends = [
         'yii\web\JqueryAsset',
     ];
+
+    public static $assetMap = [
+        'ui.bootstrap' => 'dee\angular\AngularBootstrapAsset',
+        'dee.ui' => 'dee\angular\DeeAngularUiAsset',
+        'dee.rest' => 'dee\angular\DeeAngularRestAsset',
+        'ngRoute' => 'dee\angular\AngularRouteAsset',
+        'ngResource' => 'dee\angular\AngularResourceAsset',
+        'ngAnimate' => 'dee\angular\AngularAnimateAsset',
+        'ngAria' => 'dee\angular\AngularAnimateAsset',
+        'ngTouch' => 'dee\angular\AngularAnimateAsset',
+        'validation' => 'dee\angular\AngularValidationAsset',
+        'validation.rule' => 'dee\angular\AngularValidationAsset',
+        'ui.router' => 'dee\angular\AngularUiRouterAsset'
+    ];
 }

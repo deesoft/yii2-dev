@@ -9,15 +9,15 @@ use dee\angular\NgView;
     <div class="col-md-12">
         <div class="box box-primary box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Assignment')?></h3>
+                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Assignment') ?></h3>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <div class="box-body form-horizontal">
                         <div class="form-group" >
-                            <label class="col-sm-3 control-label"><?= Yii::t('rbac-admin', 'Username')?></label>
+                            <label class="col-sm-3 control-label"><?= Yii::t('rbac-admin', 'Username') ?></label>
                             <div class="col-sm-9">
-                                <p class="form-control-static" >{{model.username}}</p>
+                                <p class="form-control-static" ng-bind="model.username"></p>
                             </div>
                         </div>
                     </div>
@@ -37,12 +37,12 @@ use dee\angular\NgView;
     <div class="col-md-6">
         <div class="box box-success box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Assigned')?>:</h3>
+                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Assigned') ?>:</h3>
                 <div class="box-tools pull-right">
                     <div class="has-feedback">
                         <input type="text" class="form-control input-sm"
-                               ng-model="q1" placeholder="Search..."
-                               ng-change="applyFilter1()">
+                               ng-model="filter.assignments" placeholder="Search..."
+                               ng-change="applyFilter('assignments')">
                         <span class="glyphicon glyphicon-search form-control-feedback"></span>
                     </div>
                 </div>
@@ -50,18 +50,20 @@ use dee\angular\NgView;
             <div class="box-body no-padding">
                 <div class="mailbox-controls">
                     <!-- Check all button -->
-                    <button class="btn btn-default btn-sm" ng-click="changeAll1()">
-                        <i class="fa" ng-class="{'fa-check':all1,'fa-square-o':!all1}"></i>
+                    <button class="btn btn-default btn-sm" ng-click="clickAll('assignments')">
+                        <i class="fa" ng-class="{'fa-check':checkAll.assignments,'fa-square-o':!checkAll.assignments}"></i>
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="clickRevoke()">
                         <i class="fa fa-arrow-right"></i>
                     </button>
                     <div class="pull-right">
-                        {{page1.begin + 1}}-{{page1.end}} of {{page1.total}}
+                        Page {{pagination.assignments.page + 1}} of {{pagination.assignments.total}}
                         <div class="btn-group">
-                            <button class="btn btn-default btn-sm" ng-click="page1.prev();" ng-class="{disabled:page1.begin <= 0}">
+                            <button class="btn btn-default btn-sm" ng-click="clickPrev('assignments');"
+                                    ng-class="{disabled:pagination.assignments.page <= 0}">
                                 <i class="fa fa-chevron-left"></i></button>
-                            <button class="btn btn-default btn-sm" ng-click="page1.next();" ng-class="{disabled:page1.end >= page1.total}">
+                            <button class="btn btn-default btn-sm" ng-click="clickNext('assignments');"
+                                    ng-class="{disabled:pagination.assignments.page >= pagination.assignments.total - 1}">
                                 <i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
@@ -69,14 +71,17 @@ use dee\angular\NgView;
                 <div table-responsive mailbox-messages>
                     <table class="table table-hover">
                         <tbody>
-                            <tr ng-repeat="item in displayed1">
+                            <tr ng-repeat="item in displayed.assignments">
                                 <td style="width: 35px;">
                                     <input type="checkbox" ng-model="item.selected">
                                 </td>
                                 <td style="width: 40%;">
-                                    <span class="label" ng-class="{'label-danger':item.type == 1,'label-success':item.type == 2}">{{item.name}}</span>
+                                    <a ng-href="#/item/{{item.type}}/{{item.name | base64Encode}}">
+                                        <span class="label" ng-class="{'label-danger':item.type == 1,'label-success':item.type == 2}"
+                                              ng-bind="item.name"></span>
+                                    </a>
                                 </td>
-                                <td >{{item.description}}</td>
+                                <td ng-bind="item.description"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -87,12 +92,12 @@ use dee\angular\NgView;
     <div class="col-md-6">
         <div class="box box-success box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Avaliable')?>:</h3>
+                <h3 class="box-title"><?= Yii::t('rbac-admin', 'Avaliable') ?>:</h3>
                 <div class="box-tools pull-right">
                     <div class="has-feedback">
                         <input type="text" class="form-control input-sm"
-                               ng-model="q2" placeholder="Search..."
-                               ng-change="applyFilter2()">
+                               ng-model="filter.avaliables" placeholder="Search..."
+                               ng-change="applyFilter('avaliables')">
                         <span class="glyphicon glyphicon-search form-control-feedback"></span>
                     </div>
                 </div>
@@ -100,18 +105,20 @@ use dee\angular\NgView;
             <div class="box-body no-padding">
                 <div class="mailbox-controls">
                     <!-- Check all button -->
-                    <button class="btn btn-default btn-sm" ng-click="changeAll2()">
-                        <i class="fa" ng-class="{'fa-check':all2,'fa-square-o':!all2}"></i>
+                    <button class="btn btn-default btn-sm" ng-click="clickAll('avaliables')">
+                        <i class="fa" ng-class="{'fa-check':checkAll.avaliables,'fa-square-o':!checkAll.avaliables}"></i>
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="clickAssign()">
                         <i class="fa fa-arrow-left"></i>
                     </button>
                     <div class="pull-right">
-                        {{page2.begin + 1}}-{{page2.end}} of {{page2.total}}
+                        Page {{pagination.avaliables.page + 1}} of {{pagination.avaliables.total}}
                         <div class="btn-group">
-                            <button class="btn btn-default btn-sm" ng-click="page2.prev();" ng-class="{disabled:page2.begin <= 0}">
+                            <button class="btn btn-default btn-sm" ng-click="clickPrev('avaliables');"
+                                    ng-class="{disabled:pagination.avaliables.page <= 0}">
                                 <i class="fa fa-chevron-left"></i></button>
-                            <button class="btn btn-default btn-sm" ng-click="page2.next();" ng-class="{disabled:page2.end >= page2.total}">
+                            <button class="btn btn-default btn-sm" ng-click="clickNext('avaliables');"
+                                    ng-class="{disabled:pagination.avaliables.page >= pagination.avaliables.total - 1}">
                                 <i class="fa fa-chevron-right"></i></button>
                         </div>
                     </div>
@@ -119,14 +126,17 @@ use dee\angular\NgView;
                 <div table-responsive mailbox-messages>
                     <table class="table table-hover">
                         <tbody>
-                            <tr ng-repeat="item in displayed2">
+                            <tr ng-repeat="item in displayed.avaliables">
                                 <td style="width: 35px;">
                                     <input type="checkbox" ng-model="item.selected">
                                 </td>
                                 <td style="width: 40%;">
-                                    <span class="label" ng-class="{'label-danger':item.type == 1,'label-success':item.type == 2}">{{item.name}}</span>
+                                    <a ng-href="#/item/{{item.type}}/{{item.name | base64Encode}}">
+                                        <span class="label" ng-class="{'label-danger':item.type == 1,'label-success':item.type == 2}"
+                                              ng-bind="item.name"></span>
+                                    </a>
                                 </td>
-                                <td >{{item.description}}</td>
+                                <td ng-bind="item.description"></td>
                             </tr>
                         </tbody>
                     </table>

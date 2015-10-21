@@ -12,5 +12,8 @@ use Yii;
  */
 class AdvanceController extends \dee\rest\AdvanceController
 {
-
+    public $serializer = [
+        'class'=>'yii\rest\Serializer',
+        'collectionEnvelope'=>'rows'
+    ];
 }

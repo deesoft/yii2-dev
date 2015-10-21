@@ -36,5 +36,7 @@ class ProductController extends AdvanceController
                 ['like', 'product_group.name', $q],
             ]);
         }
+        $t = Yii::$app->getRequest()->get('t',0);
+        sleep($t);
     }
 }

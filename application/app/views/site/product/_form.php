@@ -23,26 +23,26 @@ $widget->renderJs('js/_form.js');
                         <div class="form-group required" ng-class="{'has-error':errors.code}">
                             <label for="product-code" class="control-label">Code</label>
                             <input id="product-code" name="code" class="form-control" ng-model="model.code">
-                            <div class="help-block">{{errors.code}}</div>
+                            <div class="help-block" ng-bind="errors.code"></div>
                         </div>
                         <div class="form-group required" ng-class="{'has-error':errors.name}">
                             <label for="product-name" class="control-label">Name</label>
                             <input id="product-code" name="name" class="form-control" ng-model="model.name">
-                            <div class="help-block">{{errors.name}}</div>
+                            <div class="help-block" ng-bind="errors.name"></div>
                         </div>
                         <div class="form-group required" ng-class="{'has-error':errors.category_id}">
                             <label for="product-category_id" class="control-label">Category</label>
                             <select id="product-category_id" name="category_id" class="form-control" ng-model="model.category_id"
                                     ng-options="category.id as category.name for category in categories">
                             </select>
-                            <div class="help-block">{{errors.category_id}}</div>
+                            <div class="help-block" ng-bind="errors.category_id"></div>
                         </div>
                         <div class="form-group required" ng-class="{'has-error':errors.group_id}">
                             <label for="product-group_id" class="control-label">Group</label>
                             <select id="product-group_id" name="group_id" class="form-control" ng-model="model.group_id"
                                     ng-options="group.id as group.name for group in productGroups">
                             </select>
-                            <div class="help-block">{{errors.group_id}}</div>
+                            <div class="help-block" ng-bind="errors.group_id"></div>
                         </div>
                     </div>
                 </div>

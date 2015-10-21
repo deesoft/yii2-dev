@@ -16,7 +16,7 @@ use yii\helpers\Html;
                 <a ng-href="#/product/" class="btn btn-success btn-sm">Index</a>
             </div>
             <div class="btn-group" ng-if="model.status == 10">
-                <a ng-href="#/product/{{paramId}}/edit" class="btn btn-primary btn-sm">Update</a>
+                <a ng-href="#/product/{{model.id}}/edit" class="btn btn-primary btn-sm">Update</a>
                 <a href ng-click="deleteModel()"class="btn btn-danger btn-sm">Delete</a>
             </div>
         </div>

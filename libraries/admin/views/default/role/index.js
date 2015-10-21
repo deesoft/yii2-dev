@@ -1,37 +1,30 @@
-var $location = $injector.get('$location');
-var search = $location.search();
-var $filter = $injector.get('$filter');
-var $modal = $injector.get('$modal');
+var rows;
 
-$scope.rows = [];
+$scope.perPage = 20;
+$scope.page = 1;
 $scope.q = '';
+$scope.alerts = [];
+$scope.currentPage = 1;
+$scope.doFilter = doFilter;
+$scope.openModal = openModal;
+$scope.deleteItem = deleteItem;
+$scope.closeAlert = closeAlert;
 
-query = function () {
-    Item.query({
-        type: 1,
-    }, function (rows) {
-        $scope.rows = rows;
-        $scope.filter();
-    });
-}
-query();
+doFocus('q');
+refresh(data.data);
 
-// data provider
-$scope.provider = {
-    offset: 0,
-    page: 1,
-    itemPerPage: 20,
-    paging: function () {
-        $scope.provider.offset = ($scope.provider.page - 1) * $scope.provider.itemPerPage;
-    }
-};
-
-$scope.filter = function () {
-    $scope.filtered = $filter('filter')($scope.rows, $scope.q);
+// definition
+function refresh(data) {
+    rows = data;
+    doFilter();
 }
 
-$scope.openModal = function () {
-    $modal.open(angular.extend({},module.templates['/role/form'], {
+function doFilter() {
+    $scope.filtered = $filter('filter')(rows, $scope.q);
+}
+
+function openModal() {
+    $modal.open(angular.merge({}, widget.routes['/role/form'], {
         animation: true,
         resolve: {
             type: function () {
@@ -40,21 +33,25 @@ $scope.openModal = function () {
         }
     })).result.then(function () {
         addAlert('info', 'New role added');
-        query();
+        Item.query({type: 1}).then(function (r) {
+            refresh(r.data);
+        });
     });
 }
 
-$scope.deleteItem = function (item) {
+function deleteItem(item) {
     if (confirm('Are you sure you want to delete?')) {
-        Item.remove({id: item.name}, {}, function () {
+        Item.remove({id: item.name}).then(function () {
             addAlert('info', 'Role deleted');
+            Item.query({type: 1}).then(function (r) {
+                refresh(r.data);
+            });
         }, function (r) {
             addAlert('error', r.statusText);
         });
     }
 }
 
-$scope.alerts = [];
 addAlert = function (type, msg) {
     var alert = {type: type, msg: msg};
     if (type == 'info') {
@@ -63,6 +60,7 @@ addAlert = function (type, msg) {
     $scope.alerts.push(alert);
 };
 
-$scope.closeAlert = function (index) {
+function closeAlert(index) {
     $scope.alerts.splice(index, 1);
-};
+}
+;

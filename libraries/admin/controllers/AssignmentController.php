@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use mdm\admin\classes\MenuHelper;
 use yii\helpers\ArrayHelper;
+use yii\rbac\ManagerInterface;
 
 /**
  * AssignmentController implements the CRUD actions for Assignment model.
@@ -24,7 +25,7 @@ class AssignmentController extends Controller
     {
         return[
             'index' => ['GET', 'HEAD'],
-            'view' => ['GET'],
+            'view' => ['GET', 'HEAD'],
             'assign' => ['POST'],
             'revoke' => ['POST'],
         ];

@@ -7,7 +7,13 @@
     <page title="Home"></page>
     <div class="jumbotron">
         <h1>Congratulations!</h1>
-
+        <p>
+            <input ng-model="url" style="width: 100%"><br>
+            <input ng-model="params" style="width: 100%">
+            <button class="btn btn-default" ng-click="klikTest()">Klik</button><br>
+            <span ng-bind="hasil"></span><br>{{extract}}<br>
+            <input ng-model="page"><a ng-href="#page/{{page}}">Page {{page}}</a>
+        </p>
         <p class="lead">You have successfully created your Yii-powered application.</p>
 
         <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>

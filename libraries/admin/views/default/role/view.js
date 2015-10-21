@@ -1,25 +1,117 @@
-
-var $location = $injector.get('$location');
-var $routeParams = $injector.get('$routeParams');
-var $route = $injector.get('$route');
-var $filter = $injector.get('$filter');
-
-$scope.paramId = $routeParams.id;
-
-$scope.children = [];
-$scope.filtered1 = [];
-$scope.displayed1 = [];
-
-$scope.avaliables = [];
-$scope.filtered2 = [];
-$scope.displayed2 = [];
-
-$scope.all1 = false;
-$scope.all2 = false;
-$scope.q1 = '';
-$scope.q2 = '';
+var PAGE_SIZE = 15;
 
 $scope.alerts = [];
+var source = {};
+var filtered = {};
+
+var pagination = {
+    assignments: {
+        page: 0,
+    },
+    avaliables: {
+        page: 0,
+    }
+};
+
+$scope.filter = {
+    assignments: '',
+    avaliables: '',
+};
+$scope.applyFilter = applyFilter;
+$scope.clickNext = clickNext;
+$scope.clickPrev = clickPrev;
+$scope.clickAll = clickAll;
+$scope.clickAssign = clickAssign;
+$scope.clickRevoke = clickRevoke;
+
+$scope.pagination = pagination;
+$scope.displayed = {};
+$scope.checkAll = {
+    assignments: false,
+    avaliables: false,
+}
+
+refresh(model);
+
+// definitions
+function refresh(model) {
+    $scope.model = model;
+    source.assignments = model.assignments;
+    source.avaliables = model.avaliables;
+    
+    applyFilter('assignments',$scope.filter.assignments);
+    applyFilter('avaliables',$scope.filter.avaliables);
+}
+
+function applyFilter(f) {
+    filtered[f] = $filter('filter')(source[f], $scope.filter[f]);
+
+    pagination[f].total = Math.ceil(filtered[f].length / PAGE_SIZE);
+    if (pagination[f].page >= pagination[f].total) {
+        pagination[f].page = pagination[f].total - 1;
+    }
+    $scope.displayed[f] = $filter('limitTo')(filtered[f], PAGE_SIZE, pagination[f].page * PAGE_SIZE);
+}
+
+function clickNext(f) {
+    if (pagination[f].page < pagination[f].total - 1) {
+        pagination[f].page++;
+    }
+    $scope.displayed[f] = $filter('limitTo')(filtered[f], PAGE_SIZE, pagination[f].page * PAGE_SIZE);
+}
+
+function clickPrev(f) {
+    if (pagination[f].page > 0) {
+        pagination[f].page--;
+    }
+    $scope.displayed[f] = $filter('limitTo')(filtered[f], PAGE_SIZE, pagination[f].page * PAGE_SIZE);
+}
+
+function clickAll(f) {
+    $scope.checkAll[f] = !$scope.checkAll[f];
+    angular.forEach($scope.displayed[f], function (item) {
+        item.selected = $scope.checkAll[f];
+    });
+}
+
+function clickRevoke() {
+    var items = $filter('filter')($scope.displayed.assignment, {selected: true});
+    if (items.length > 0) {
+        var post = {
+            items: jQuery.map(items, function (item) {
+                return item.name;
+            }),
+        };
+        $scope.model.revoke({}, post).then(function (r) {
+            addAlert('info', r.count + ' item(s) revoked');
+            $scope.model.get().then(function(m){
+                refresh(m);
+            });
+        }, function (r) {
+            addAlert('error', r.statusText);
+        });
+    }
+}
+
+function clickAssign() {
+    var items = $filter('filter')($scope.displayed.assignment, {selected: true});
+    if (items.length > 0) {
+        var post = {
+            items: jQuery.map(items, function (item) {
+                return item.name;
+            }),
+        };
+        $scope.model.assign({}, post).then(function (r) {
+            addAlert('info', r.count + ' item(s) revoked');
+            $scope.model.get().then(function(m){
+                refresh(m);
+            });
+        }, function (r) {
+            addAlert('error', r.statusText);
+        });
+    }
+}
+
 
 $scope.modelError = {};
 

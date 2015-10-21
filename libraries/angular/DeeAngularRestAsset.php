@@ -26,7 +26,7 @@ class DeeAngularRestAsset extends \yii\web\AssetBundle
      * @inheritdoc
      */
     public $depends = [
-        'dee\angular\AngularResourceAsset',
+        'dee\angular\AngularAsset',
     ];
 
 }

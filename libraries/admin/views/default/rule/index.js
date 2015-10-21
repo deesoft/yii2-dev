@@ -29,11 +29,11 @@ $scope.filter = function () {
     $scope.filtered = $filter('filter')($scope.rows, $scope.q);
 }
 
-$scope.openModal = function () {
-    $modal.open(angular.extend({},module.templates['/rule/form'], {
+$scope.addItem = function () {
+    $modal.open(angular.merge({},widget.templates['/rule/form'], {
         animation: true,
         resolve: {
-            item: function () {
+            model: function () {
                 return {};
             }
         },
@@ -44,13 +44,13 @@ $scope.openModal = function () {
 }
 
 $scope.showItem = function (item) {
-    $modal.open(angular.extend({},module.templates['/rule/view'], {
+    $modal.open(angular.merge({},widget.templates['/rule/view'], {
         animation: true,
         size:'lg',
         resolve: {
-            name: function () {
-                return item.name;
-            }
+            model: ['Rule',function (Rule) {
+                return Rule.get({id:base64Encode(item.name),expand:'content'});
+            }]
         },
     }));
 }
@@ -67,10 +67,10 @@ $scope.deleteItem = function (item) {
 }
 
 $scope.editItem = function (item) {
-    $modal.open(angular.extend({},module.templates['/rule/form'], {
+    $modal.open(angular.merge({},widget.templates['/rule/form'], {
         animation: true,
         resolve: {
-            item: function () {
+            model: function () {
                 return item;
             }
         },

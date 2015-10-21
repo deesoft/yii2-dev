@@ -193,6 +193,15 @@ class AuthItem extends \yii\base\Model
     }
 
     /**
+     * Get id
+     * @return string
+     */
+    public function getId()
+    {
+        return base64_encode($this->name);
+    }
+
+    /**
      * Get item
      * @return Item
      */
@@ -276,6 +285,13 @@ class AuthItem extends \yii\base\Model
             self::$_rules = array_keys($manager->getRules());
         }
         return self::$_rules;
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+        $fields['id'] = 'id';
+        return $fields;
     }
 
     public function extraFields()

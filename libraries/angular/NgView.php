@@ -9,18 +9,22 @@ use yii\helpers\Json;
 use yii\helpers\Inflector;
 use yii\web\View as WebView;
 use yii\base\Widget;
-use yii\helpers\Url;
+use yii\helpers\FileHelper;
 use yii\web\AssetBundle;
+use yii\web\JsExpression;
 
 /**
  * Description of NgView
  *
- * 
+ * @property string $controller
+ *
  * @author Misbahul D Munir <misbahuldmunir@gmail.com>
  * @since 1.0
  */
 class NgView extends Widget
 {
+    public $options = [];
+
     /**
      *
      * @var array
@@ -31,7 +35,7 @@ class NgView extends Widget
      *
      * @var array
      */
-    public $resources = [];
+    public $templates = [];
 
     /**
      *
@@ -48,11 +52,12 @@ class NgView extends Widget
      * @var array
      */
     public $requires = [];
+    public $resources = [];
 
     /**
      * @var string
      */
-    public $tag = 'ng-view';
+    public $tag = 'div';
 
     /**
      *
@@ -61,18 +66,12 @@ class NgView extends Widget
     public $js;
 
     /**
-     *
-     * @var string
-     */
-    public $controller;
-
-    /**
      * @var array
      */
     public $clientOptions;
 
     /**
-     * @var array 
+     * @var array
      */
     public $injection = ['$scope', '$injector'];
 
@@ -80,34 +79,19 @@ class NgView extends Widget
      * @var boolean
      */
     public $remote;
-
-    /**
-     * @var string 
-     */
-    public $queryParam = '_ng-view';
-
-    /**
-     * @var array
-     */
-    public static $requireAssets = [
-        'ui.bootstrap' => 'dee\angular\AngularBootstrapAsset',
-        'dee.ui' => 'dee\angular\DeeAngularUiAsset',
-        'dee.rest' => 'dee\angular\DeeAngularRestAsset',
-        'ngRoute' => 'dee\angular\AngularRouteAsset',
-        'ngResource' => 'dee\angular\AngularResourceAsset',
-        'ngAnimate' => 'dee\angular\AngularAnimateAsset',
-        'ngAria' => 'dee\angular\AngularAnimateAsset',
-        'ngTouch' => 'dee\angular\AngularAnimateAsset',
-        'validation' => 'dee\angular\AngularValidationAsset',
-        'validation.rule' => 'dee\angular\AngularValidationAsset',
-    ];
     private $_varName;
 
     /**
-     *
-     * @var static 
+     * @var static
      */
     public static $instance;
+    private $_templates = [];
+    private $_controllers = [];
+    private $_services = [];
+    private $_prefixes = [];
+    private $_routeProviders = [];
+    private $_injections = [];
+    private $_controller;
 
     /**
      * @inheritdoc
@@ -118,9 +102,6 @@ class NgView extends Widget
         $this->_varName = Inflector::variablize($this->name);
 
         $this->requires[] = 'ngRoute';
-        if (!empty($this->resources)) {
-            $this->requires[] = 'ngResource';
-        }
         $this->requires = array_unique($this->requires);
     }
 
@@ -130,124 +111,191 @@ class NgView extends Widget
     public function run()
     {
         $view = $this->getView();
-        if (!$this->remote || Yii::$app->getRequest()->get($this->queryParam) === 'script') {
-            $js = $this->generate();
-            if ($this->remote) {
-                $response = Yii::$app->getResponse();
-                $response->format = 'raw';
-                $response->getHeaders()->set('Content-Type', 'application/javascript');
-                $response->content = $js;
-                $response->send();
-                Yii::$app->end();
-            } else {
-                $view->registerJs($js, WebView::POS_END);
-            }
-        }
         // Asset Dependency
-        $key = md5(Yii::$app->controller->route . $this->name);
+        $am = Yii::$app->getAssetManager();
+        $key = md5(serialize([__CLASS__, Yii::$app->controller->route, $this->name]));
         $bundle = [
-            'baseUrl' => '',
+            'basePath' => '',
             'depends' => [AngularAsset::className()],
             'js' => [],
         ];
+        $js = $this->generate();
         foreach ($this->requires as $module) {
-            if (isset(static::$requireAssets[$module])) {
-                $bundle['depends'][] = static::$requireAssets[$module];
+            if (isset(AngularAsset::$assetMap[$module])) {
+                $bundle['depends'][] = AngularAsset::$assetMap[$module];
             }
         }
         if ($this->remote) {
-            $key = md5(Yii::$app->controller->route . $this->name);
-            $url = Url::current([$this->queryParam => 'script']);
-            $bundle['js'][] = strncmp($url, '//', 2) === 0 ? $url : ltrim($url, '/');
+            $path = sprintf('%x', crc32($key));
+            $jsName = Inflector::camel2id($this->name) . '.js';
+            $bundle['js'][] = $jsName;
+            $bundle['basePath'] = $am->basePath . '/' . $path;
+            $bundle['baseUrl'] = $am->baseUrl . '/' . $path;
+            FileHelper::createDirectory(Yii::getAlias($bundle['basePath']));
+            file_put_contents(Yii::getAlias($bundle['basePath'] . '/' . $jsName), $js);
+        } else {
+            $view->registerJs($js, WebView::POS_END);
         }
-        Yii::$app->getAssetManager()->bundles[$key] = new AssetBundle($bundle);
+        $am->bundles[$key] = new AssetBundle($bundle);
         $view->registerAssetBundle($key);
 
         static::$instance = null;
-        return Html::tag($this->tag, '', ['ng-app' => $this->useNgApp ? $this->name : false, 'ng-view' => $this->tag != 'ng-view']);
+        $options = $this->options;
+        if ($this->tag !== 'ng-view' && !isset($options['ng-view'])) {
+            $options['ng-view'] = true;
+        }
+        if ($this->useNgApp) {
+            $options[ng - app] = $this->name;
+        }
+        return Html::tag($this->tag, '', $options);
+    }
+
+    public function getController()
+    {
+        return $this->_controller;
+    }
+
+    public function requires($modules)
+    {
+        $this->requires = array_unique(array_merge($this->requires, (array) $modules));
     }
 
     protected function generate()
     {
-        $view = $this->getView();
-
-        $routeProviders = [];
-        $controllers = [];
-        $templates = [];
-        foreach ($this->routes as $path => $route) {
-            $visible = ArrayHelper::remove($route, 'visible', true);
-            list($routeProvider, $controller, $template) = $this->applyRoute($route, $path);
-
-            if ($path === 'otherwise') {
-                $routeProviders[] = "\$routeProvider.otherwise({$routeProvider});";
-            } elseif ($visible) {
-                $p = Json::htmlEncode($path);
-                $routeProviders[] = "\$routeProvider.when({$p},{$routeProvider});";
-            }
-            if ($controller) {
-                $controllers[$controller[0]] = $controller[1];
-            }
-            if ($template) {
-                $templates[$path] = $template;
-            }
-        }
-
+        $this->add([
+            'injection' => $this->injection,
+            'js' => $this->js,
+            'templates' => $this->templates,
+            'routes' => $this->routes,
+            'resources' => $this->resources,
+        ]);
         $js = [];
         $js[] = "{$this->_varName} = (function(options){";
         $js[] = $this->renderModule();
-        $js[] = $this->renderTemplates($templates);
-        $js[] = $this->renderRouteProviders($routeProviders);
-        $js[] = $this->renderControllers($controllers);
-        $js[] = $this->renderResources();
-        if ($this->js !== null) {
-            foreach ((array) $this->js as $file) {
-                $js[] = "\n" . static::parseBlockJs($view->render($file));
-            }
-        }
+        $js[] = implode("\n", $this->_services);
+        $js[] = $this->renderTemplates();
+        $js[] = $this->renderRouteProviders();
+        $js[] = $this->renderControllers();
 
         $options = empty($this->clientOptions) ? '{}' : Json::htmlEncode($this->clientOptions);
         $js[] = "\nreturn module;\n})({$options});";
 
-
-        return implode("\n", $js);
+        return implode("\n\n", $js);
     }
 
-    protected function applyRoute($route, $path)
+    protected function applyPrefix($path)
+    {
+        if (strncmp($path, '@', 1) === 0) {
+            return substr($path, 1);
+        }
+        return strncmp($path, '/', 1) === 0 ? $path : (end($this->_prefixes) ? : '/') . $path;
+    }
+
+    public function add($configs)
     {
         $view = $this->getView();
-        $routeProvider = $controller = $template = null;
-
-        if (is_string($route)) {
-            $routeProvider = Json::htmlEncode(['redirectTo' => $route]);
-        } elseif (isset($route['link'])) {
-            $link = Json::htmlEncode($route['link']);
-            unset($route['link'], $route['view'], $route['controller'], $route['visible']);
-            $route = Json::htmlEncode($route);
-            $routeProvider = "angular.extend({},module.templates[{$link}],{$route})";
-        } else {
-            $injection = ArrayHelper::remove($route, 'injection', []);
-
-            if (empty($route['controller'])) {
-                $route['controller'] = Inflector::camelize($path) . 'Ctrl';
-            }
-            $this->controller = $route['controller'];
-            $controller = [$this->controller, $injection];
-
-            if (isset($route['js'])) {
-                $this->renderJs($route['js']);
-                unset($route['js']);
-            }
-            if (isset($route['view'])) {
-                $route['template'] = $view->render($route['view'], ['widget' => $this]);
-                unset($route['view']);
-            }
-            $template = $route;
-
-            $path = Json::htmlEncode($path);
-            $routeProvider = "module.templates[{$path}]";
+        if (isset($configs['injection'])) {
+            $this->_injections[] = (array) $configs['injection'];
         }
-        $this->controller = null;
-        return [$routeProvider, $controller, $template];
+        if (isset($configs['js'])) {
+            foreach ((array) $configs['js'] as $file) {
+                $this->_services[] = Helper::parseBlockJs($view->render($file));
+            }
+        }
+        if (!empty($configs['resources'])) {
+            $this->requires(['ngResource']);
+            $this->_services[] = $this->renderResources($configs['resources']);
+        }
+        if (!empty($configs['templates'])) {
+            foreach ($configs['templates'] as $name => $config) {
+                $name = $this->applyPrefix($name);
+                $this->applyTemplate($name, $config);
+                $this->_templates[$name] = $config;
+            }
+        }
+
+        if (!empty($configs['routes'])) {
+            $otherwise = null;
+            foreach ($configs['routes'] as $path => $config) {
+                if (is_int($path)) {
+                    $view->render($config, ['widget' => $this]);
+                    continue;
+                }
+                if ($path === 'otherwise') {
+                    $path = count($this->_prefixes) ? $this->applyPrefix(':redirect*') : 'otherwise';
+                    $otherwise = true;
+                } else {
+                    $path = $this->applyPrefix($path);
+                }
+                $p = json_encode($path);
+
+                if (is_string($config) && strncmp($config, 'js:', 3) !== 0) {
+                    $this->_prefixes[] = rtrim($path, '/') . '/';
+                    $view->render($config, ['widget' => $this]);
+                    array_pop($this->_prefixes);
+                } else {
+                    if (is_string($config)) {
+                        $config = substr($config, 3);
+                    } elseif ($config instanceof JsExpression) {
+                        $config = $config->expression;
+                    } else {
+                        $this->applyTemplate($path, $config);
+                        $config = Json::htmlEncode($config);
+                    }
+                    if ($otherwise === true) {
+                        $otherwise = ($path === 'otherwise') ? ".otherwise({$config})" : ".when({$p},{$config})";
+                    } else {
+                        $this->_routeProviders[] = ".when({$p},{$config})";
+                    }
+                }
+            }
+            if ($otherwise) {
+                $this->_routeProviders[] = $otherwise;
+            }
+        }
+
+        if (isset($configs['injection'])) {
+            array_pop($this->_injections);
+        }
+    }
+
+    protected function applyTemplate($path, &$config)
+    {
+        $view = $this->getView();
+        if (isset($config['js'])) {
+            $injection = end($this->_injections);
+            if ($injection === false) {
+                $injection = $this->injection;
+            }
+            if (empty($config['controller'])) {
+                $config['controller'] = Inflector::camelize($path) . 'Controller';
+            }
+            $this->_controller = $config['controller'];
+            $injection = array_unique(array_merge($injection, ArrayHelper::remove($config, 'injection', [])));
+            $this->_controllers[$this->_controller]['injection'] = $injection;
+            $this->_controllers[$this->_controller]['js'][] = Helper::parseBlockJs($view->render($config['js'], ['widget' => $this]));
+            unset($config['js']);
+        } elseif (isset($config['controller'])) {
+            $this->_controller = $config['controller'];
+        }
+
+        if (isset($config['view'])) {
+            $config['template'] = $view->render($config['view'], ['widget' => $this]);
+            unset($config['view']);
+        }
+
+        if (isset($config['resolve'])) {
+            if (is_string($config['resolve']) && strncmp($config['resolve'], 'js:', 3) === 0) {
+                $config['resolve'] = new JsExpression(substr($config['resolve'], 3));
+            } elseif (is_array($config['resolve'])) {
+                foreach ($config['resolve'] as $key => $value) {
+                    if (is_string($value) && strncmp($value, 'js:', 3) === 0) {
+                        $config['resolve'][$key] = new JsExpression(substr($value, 3));
+                    }
+                }
+            }
+        }
+        $this->_controller = null;
     }
 
     /**
@@ -258,24 +306,33 @@ class NgView extends Widget
      */
     protected function renderModule()
     {
-        $js = "var module = angular.module('{$this->name}'," . Json::htmlEncode($this->requires) . ");\n"
-            . "var {$this->_varName} = module;";
-        return $js;
+        $requires = Json::htmlEncode($this->requires);
+        return <<<JS
+var module = angular.module('{$this->name}',$requires);
+var {$this->_varName} = module;
+var widget = module.widget = {};
+JS;
     }
 
-    protected function renderTemplates($templates)
+    protected function renderTemplates()
     {
-        return "module.templates = " . Json::htmlEncode($templates) . ';';
+        $templates = empty($this->_templates) ? '{}' : Json::htmlEncode($this->_templates);
+        return "widget.templates = $templates;";
     }
 
     /**
      * Render script config for $routeProvider
      * @param array $routeProviders
      */
-    protected function renderRouteProviders($routeProviders)
+    protected function renderRouteProviders()
     {
-        $routeProviders = implode("\n", $routeProviders);
-        return "module.config(['\$routeProvider',function(\$routeProvider){\n{$routeProviders}\n}]);";
+        $routeProviders = implode("\n", $this->_routeProviders);
+        return <<<JS
+module.config(['\$routeProvider',function(\$routeProvider){
+\$routeProvider
+{$routeProviders};
+}]);
+JS;
     }
 
     /**
@@ -288,16 +345,24 @@ class NgView extends Widget
      * ```
      * @param array $controllers
      */
-    protected function renderControllers($controllers)
+    protected function renderControllers()
     {
         $js = [];
         $view = $this->getView();
-        foreach ($controllers as $name => $injection) {
-            $injection = array_unique(array_merge($this->injection, (array) $injection));
-            $injectionStr = rtrim(Json::htmlEncode($injection), ']');
+        foreach ($this->_controllers as $name => $controller) {
+            $injection = $controller['injection'];
+            $injectionStr = Json::htmlEncode($injection);
             $injectionVar = implode(", ", $injection);
-            $function = implode("\n", ArrayHelper::getValue($view->js, $name, []));
-            $js[] = "module.controller('$name',{$injectionStr},\nfunction($injectionVar){\n{$function}\n}]);";
+
+            $function = implode("\n", $controller['js']);
+            $function .= implode("\n", ArrayHelper::remove($view->js, $name, []));
+            $js[] = <<<JS
+module.controller('$name',$name);
+$name.\$inject = $injectionStr;
+function $name($injectionVar){
+$function
+}
+JS;
         }
         return implode("\n", $js);
     }
@@ -310,46 +375,28 @@ class NgView extends Widget
      * }]);
      * ```
      */
-    protected function renderResources()
+    protected function renderResources($resources)
     {
-        if (!empty($this->resources)) {
-            $js = [];
-            foreach ($this->resources as $name => $config) {
-                $url = Json::htmlEncode($config['url']);
-                if (empty($config['paramDefaults'])) {
-                    $paramDefaults = '{}';
-                } else {
-                    $paramDefaults = Json::htmlEncode($config['paramDefaults']);
-                }
-                if (empty($config['actions'])) {
-                    $actions = '{}';
-                } else {
-                    $actions = Json::htmlEncode($config['actions']);
-                }
-
-                $js[] = <<<JS
+        $js = [];
+        foreach ($resources as $name => $config) {
+            $url = Json::htmlEncode($config['url']);
+            if (empty($config['paramDefaults'])) {
+                $paramDefaults = '{}';
+            } else {
+                $paramDefaults = Json::htmlEncode($config['paramDefaults']);
+            }
+            if (empty($config['actions'])) {
+                $actions = '{}';
+            } else {
+                $actions = Json::htmlEncode($config['actions']);
+            }
+            $js[] = <<<JS
 module.factory('$name',['\$resource',function(\$resource){
     return \$resource({$url},{$paramDefaults},{$actions});
 }]);
 JS;
-            }
-            return implode("\n", $js);
         }
-        return '';
-    }
-
-    /**
-     * Only get script inner of `script` tag.
-     * @param string $js
-     * @return string
-     */
-    public static function parseBlockJs($js)
-    {
-        $jsBlockPattern = '|^<script[^>]*>(?P<block_content>.+?)</script>$|is';
-        if (preg_match($jsBlockPattern, trim($js), $matches)) {
-            $js = trim($matches['block_content']);
-        }
-        return $js;
+        return implode("\n", $js);
     }
 
     /**
@@ -362,7 +409,7 @@ JS;
     public function renderJs($viewFile, $params = [], $pos = null)
     {
         $params['widget'] = $this;
-        $js = $this->view->render($viewFile, $params);
+        $js = $this->getView()->render($viewFile, $params);
         $this->registerJs($js, $pos);
     }
 
@@ -372,9 +419,16 @@ JS;
      * @param string $js
      * @param integer|string $pos
      */
-    public function registerJs($js, $pos = null)
+    public function registerJs($js, $pos = null, $key = null)
     {
-        $pos = $pos ? : ($this->controller ? : WebView::POS_END);
-        $this->view->registerJs(static::parseBlockJs($js), $pos);
+        if ($pos === null) {
+            if ($this->_controller) {
+                $this->_controllers[$this->_controller]['js'][] = Helper::parseBlockJs($js);
+            } else {
+                $this->_services[] = Helper::parseBlockJs($js);
+            }
+        } else {
+            $this->getView()->registerJs(Helper::parseBlockJs($js), $pos, $key);
+        }
     }
 }

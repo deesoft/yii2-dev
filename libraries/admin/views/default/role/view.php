@@ -25,16 +25,16 @@ use dee\angular\NgView;
                             <label class="col-sm-3 control-label"><?= Yii::t('rbac-admin', 'Name')?></label>
                             <div class="col-sm-9">
                                 <input ng-if="isEdit" class="form-control" ng-model="edit.name">
-                                <div ng-if="isEdit && modelError.name" class="help-block">{{modelError.name}}</div>
-                                <p ng-if="!isEdit" class="form-control-static" >{{model.name}}</p>
+                                <div ng-if="isEdit && modelError.name" class="help-block" ng-bind="modelError.name"></div>
+                                <p ng-if="!isEdit" class="form-control-static" ng-bind="model.name"></p>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{'has-error':modelError.description}">
                             <label class="col-sm-3 control-label"><?= Yii::t('rbac-admin', 'Description')?></label>
                             <div class="col-sm-9">
                                 <input ng-if="isEdit" class="form-control" ng-model="edit.description">
-                                <div ng-if="isEdit && modelError.name" class="help-block">{{modelError.description}}</div>
-                                <p ng-if="!isEdit" class="form-control-static">{{model.description}}</p>
+                                <div ng-if="isEdit && modelError.name" class="help-block" ng-bind="modelError.description"></div>
+                                <p ng-if="!isEdit" class="form-control-static" ng-bind="model.description"></p>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{'has-error':modelError.ruleName}">
@@ -44,16 +44,16 @@ use dee\angular\NgView;
                                         ng-options="rule for rule in rules">
                                     <option></option>
                                 </select>
-                                <div ng-if="isEdit && modelError.name" class="help-block">{{modelError.ruleName}}</div>
-                                <p ng-if="!isEdit" class="form-control-static">{{model.ruleName}}</p>
+                                <div ng-if="isEdit && modelError.name" class="help-block" ng-bind="modelError.ruleName"></div>
+                                <p ng-if="!isEdit" class="form-control-static" ng-bind="model.ruleName"></p>
                             </div>
                         </div>
                         <div class="form-group" ng-class="{'has-error':modelError.data}">
                             <label class="col-sm-3 control-label"><?= Yii::t('rbac-admin', 'Data')?></label>
                             <div class="col-sm-9">
                                 <textarea ng-if="isEdit" class="form-control" ng-model="edit.data"></textarea>
-                                <div ng-if="isEdit && modelError.name" class="help-block">{{modelError.data}}</div>
-                                <p ng-if="!isEdit" class="form-control-static">{{model.data}}</p>
+                                <div ng-if="isEdit && modelError.name" class="help-block" ng-bind="modelError.data"></div>
+                                <p ng-if="!isEdit" class="form-control-static" ng-bind="model.data"></p>
                             </div>
                         </div>
                     </div>
@@ -77,8 +77,8 @@ use dee\angular\NgView;
                 <div class="box-tools pull-right">
                     <div class="has-feedback">
                         <input type="text" class="form-control input-sm"
-                               ng-model="q1" placeholder="Search..."
-                               ng-change="applyFilter1()">
+                               ng-model="filter.assignments" placeholder="Search..."
+                               ng-change="applyFilter('assignments')">
                         <span class="glyphicon glyphicon-search form-control-feedback"></span>
                     </div>
                 </div>
@@ -86,7 +86,7 @@ use dee\angular\NgView;
             <div class="box-body no-padding">
                 <div class="mailbox-controls">
                     <!-- Check all button -->
-                    <button class="btn btn-default btn-sm" ng-click="changeAll1()">
+                    <button class="btn btn-default btn-sm" ng-click="clickAll('assignments')">
                         <i class="fa" ng-class="{'fa-check':all1,'fa-square-o':!all1}"></i>
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="clickRevoke()">

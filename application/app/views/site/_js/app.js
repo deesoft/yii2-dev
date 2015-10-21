@@ -1,9 +1,21 @@
 var opts = options;
 var baseApiUrl = options.baseApiUrl;
 var TOKEN_KEY = CryptoJS.MD5('d426_angular_token');
+var resolves = {};
 
 module.run(['$rootScope', function ($rootScope) {
         $rootScope.Page = {};
+
+        $rootScope.onLoading = false;
+        $rootScope.$on('$routeChangeStart', function () {
+            $rootScope.onLoading = true;
+        });
+        $rootScope.$on('$routeChangeSuccess', function () {
+            $rootScope.onLoading = false;
+        });
+        $rootScope.$on('$routeChangeError', function () {
+            $rootScope.onLoading = false;
+        });
     }]);
 
 module.directive('navMenu', ['$location', function ($location) {
@@ -23,7 +35,7 @@ module.directive('navMenu', ['$location', function ($location) {
                 }
             });
 
-            scope.$on('$routeChangeStart', function () {
+            scope.$on('$routeChangeSuccess', function () {
                 var $link = urlMap[$location.path()];
                 jQuery(element).find('li').removeClass(activeClass);
 
@@ -31,18 +43,5 @@ module.directive('navMenu', ['$location', function ($location) {
                     $link.parents('li').addClass(activeClass);
                 }
             });
-        }
-    }]);
-
-module.directive('page', ['$rootScope', function ($rootScope) {
-        return {
-            scope:{
-                title:'@'
-            },
-            link:function (scope){
-                scope.$watch('title',function(val){
-                    $rootScope.Page.title = val;
-                });
-            }
         }
     }]);

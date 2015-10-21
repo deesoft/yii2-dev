@@ -1,56 +1,21 @@
 <?php
-use yii\web\JsExpression;
-$func = <<<FUNC
-function(param){
-    return 'template/' + param.page;
-}
-FUNC;
-
 return [
     '/' => [
-        'redirectTo' => '/index',
+        'redirectTo' => '/site/',
     ],
-    '/index' => [
-        'view' => 'site/index',
-        'js' => 'site/js/index.js',
-    ],
-    '/contact' => [
-        'view' => 'site/contact',
-    ],
-    '/page/:page' => [
-        'templateUrl' => new JsExpression($func),
-    ],
+    'site/main',
     '/user/login' => [
         'visible' => false,
         'view' => 'user/login',
         'js' => 'user/js/login.js',
-        'injection' => ['$modalInstance','$http'],
+        'injection' => ['$modalInstance', '$http'],
     ],
     '/user/signup' => [
         'view' => 'user/signup',
         'js' => 'user/js/signup.js',
         'injection' => ['$http'],
     ],
-    '/purchase' => [
-        'view' => 'purchase/index',
-        'js' => 'purchase/js/index.js',
-        'injection' => ['Purchase',],
-    ],
-    '/purchase/new' => [
-        'view' => 'purchase/create',
-        'js' => 'purchase/js/create.js',
-        'injection' => ['Purchase',],
-    ],
-    '/purchase/:id/edit' => [
-        'view' => 'purchase/update',
-        'js' => 'purchase/js/update.js',
-        'injection' => ['Purchase',],
-    ],
-    '/purchase/:id' => [
-        'view' => 'purchase/view',
-        'js' => 'purchase/js/view.js',
-        'injection' => ['Purchase'],
-    ],
+    'purchase/main',
     '/sales' => [
         'view' => 'sales/index',
         'js' => 'sales/js/index.js',
@@ -116,26 +81,7 @@ return [
         'js' => 'movement/js/view.js',
         'injection' => ['Movement',],
     ],
-    '/product'=>[
-        'view'=>'product/index',
-        'js'=>'product/js/index.js',
-        'injection'=>['Product'],
-    ],
-    '/product/new'=>[
-        'view'=>'product/create',
-        'js'=>'product/js/create.js',
-        'injection'=>['Product'],
-    ],
-    '/product/:id/edit'=>[
-        'view'=>'product/update',
-        'js'=>'product/js/update.js',
-        'injection'=>['Product'],
-    ],
-    '/product/:id'=>[
-        'view'=>'product/view',
-        'js'=>'product/js/view.js',
-        'injection'=>['Product'],
-    ],
+    'product/main',
     'otherwise' => [
         'view' => 'site/error'
     ],

@@ -2,6 +2,7 @@
 var $location = $injector.get('$location');
 var $routeParams = $injector.get('$routeParams');
 var $route = $injector.get('$route');
+var vm = this;
 
 $scope.paramId = $routeParams.id;
 // model

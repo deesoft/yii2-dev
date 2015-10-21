@@ -1,22 +1,11 @@
-var $routeParams = $injector.get('$routeParams');
-$scope.paramId = $routeParams.id;
 // model
+$scope.model = model;
+$scope.deleteModel = deleteModel;
 
-query = function () {
-    Product.get({
-        id: $scope.paramId,
-        expand: 'category,group'
-    }, function (row) {
-        $scope.model = row;
-    });
-};
-query();
-
-// delete Item
-$scope.deleteModel = function () {
+function deleteModel() {
     if (confirm('Are you sure you want to delete')) {
-        Product.remove({id: $scope.paramId}, {}, function () {
+        Product.remove($scope.model.id).then(function () {
             window.history.back();
         });
     }
-};
+}
